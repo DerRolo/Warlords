@@ -1,0 +1,713 @@
+KRIEGSHERR: SCHLACHTLINIEN, PATCHNOTES
+Datei: kriegsherr_v0.36.html (eine einzelne HTML-Datei, laeuft am PC und am Handy)
+Stand: 16.11.2026 (v0.36)
+
+v0.36 (aktuell)
+=====================================================
+Magier-Auren = Schussreichweite
+- Heilende Magie und Waldsegen wirken jetzt genau innerhalb der Schussreichweite des Magiers, immer, auch nach dem Upgrade Seherglas (Reichweite waechst, die Aura waechst mit). Vorher fester Wert (16 % der Feldbreite).
+- Der Ring im Kampf zeigt diese Reichweite. Beispiel Elfen-Druide: 24 % der Feldbreite, mit Seherglas Stufe 3 rund 30 %.
+- Beschreibungen angepasst (Deutsch und Englisch).
+- Unveraendert: Koenigsbanner 16 % der Feldbreite (Ritter/Paladin sind keine Magier), Pestodem 11 %.
+
+Geprueft
+- Im Chromium: Reichweite 240 auf 298 mit Seherglas 3, Ring gleich gross; Heilung wirkt 5 Einheiten innerhalb, nicht 5 ausserhalb. Keine Konsolenfehler.
+
+=====================================================
+v0.35
+=====================================================
+Volks-Upgrades (neuer Reiter im Hauptstadt-Fenster, Name je Volk)
+Menschen "Koenigshof", Elfen "Hain", Orks "Kriegslager", Zwerge "Runenhalle", Untote "Gruft". Je Volk 3 eigene Upgrades, alle mit echter Wirkung im Kampf. Die allgemeinen Upgrades bleiben fuer alle gleich.
+- Untote: Wiederkehr (Wiedererweckung 25 % + 5 % je Stufe, bis 45 %, 4 Stufen), Starke Auferstandene (zurueckgekehrte Skelette +20 % Leben, +12 % Schaden je Stufe, 3 Stufen), Pestodem (Gegner im Umkreis von 11 % der Feldbreite um deine Einheiten verlieren 0,4 % Leben/s je Stufe, 3 Stufen).
+- Orks: Blutrausch (je besiegtem Gegner +0,3 % Schaden je Stufe, hoechstens +25 %), Kriegsgebruell (Ansturm je Stufe 1 Sieg frueher bereit, bis 12 statt 15), Dicke Haut (Troll und Kriegsherr regenerieren 0,5 % Leben/s je Stufe).
+- Zwerge: Runenschmiede (gegnerische Ruestung 6 % niedriger je Stufe, 4 Stufen), Tiefenbraeu (10 s nach dem Ansturm: +8 % Schaden und 4 % weniger erlittener Schaden je Stufe), Bergfestung (stehende Einheiten +4 Ruestung je Stufe).
+- Elfen: Waldsegen (Einheiten im Umkreis eines Druiden machen +4 % Schaden je Stufe, 3 Stufen), Falkenauge (Fernkaempfer +6 % Reichweite und +3 % Trefferchance je Stufe), Mondlicht (4 % Ausweichchance je Stufe, 4 Stufen).
+- Menschen: Koenigsbanner (Einheiten im Umkreis eines Ritters oder Paladins +4 % Schaden je Stufe), Belagerungswerk (Armbrustschuetze und Hofmagier +8 % Schaden je Stufe), Gilde der Haendler (+6 % Beute je Stufe, 4 Stufen; wirkt auch auf die Anzeige der Beute).
+- Eigene Symbole fuer alle 15. Preise sind Platzhalter fuer die Balance.
+- Die Heilung der Magier bleibt ein allgemeines Upgrade ("Heilende Magie", fuer jedes Volk gleich), die Elfen haben stattdessen den Waldsegen.
+
+Transparenz: Umkreis von Auren
+- "Umkreis" bedeutet: gleiche Bahn, Abstand bis 16 % der Feldbreite (Heilende Magie, Waldsegen, Koenigsbanner) bzw. 11 % (Pestodem). Das steht jetzt in den Beschreibungen.
+- Im Kampf: Maus ueber eine Einheit mit Aura zeigt einen gestrichelten Ring mit dem genauen Umkreis und dem Wert (z.B. "Heilung 1,5 % Leben/s"). Am Handy: Einheit antippen (der Ring bleibt 3,5 s). Der Ring liegt auf der Bahn der Einheit und wirkt nur auf diese Bahn.
+- In der Hauptstadt steht bei diesen Upgrades ein Hinweis auf den Ring.
+
+Geprueft
+- Im Chromium: Wirkung gemessen (Wiederkehr: 492 auf 1069 Wiedererweckungen in 40 Kaempfen; Waldsegen-Flag bei Druide und Einheit; Heilung 0,4 LP in 1 s bei 28 LP Maximum = 1,5 %/s; Pestodem 1,1 von 90 LP in 1 s; Kriegsgebruell: Ansturm bei 12). Karte, Reiter und Ring angesehen. Keine Konsolenfehler.
+- Nicht geprueft: Balance (Winraten schwanken bei kleinen Stichproben, ausserdem hat jedes Upgrade nur Wirkung, wenn die passenden Einheiten im Heer sind).
+
+Offen: Schlachtkarten anpassen (spaeter).
+
+=====================================================
+v0.34
+=====================================================
+Karte
+- Die Leiste unten (Schwierigkeit und Beute) ist weg. Sie erscheint nur noch, wenn dir das ganze Land gehoert (Knopf "Neue Kampagne").
+- Die Info links oben zeigt jetzt alles: Name, Schwierigkeit, Beute in Gold (nur bei angreifbaren Gebieten), Besitzer, Einheiten. Bei nicht angrenzenden Gebieten steht dort "Nicht angrenzend an dein Land.".
+- Am PC ist die Info deutlich groesser (Breite und Schrift richten sich nach dem Fenster).
+
+Sound: grosse Einheiten
+- Neue Sound-Kategorie "big" aus deiner Demo-Datei (gross_NEU_wuchtig.mp3): Die Datei wurde in 8 einzelne wuchtige Schlaege geschnitten (je ca. 1,3 s, mit kurzem Ausblenden, mono, ca. 130 KB insgesamt).
+- Jeder Schlag grosser Einheiten (Troll, Paladin, Eisenbrecher usw., also alles mit Kampfart "gross") spielt zufaellig einen der 8 Schlaege, leicht in der Tonhoehe variiert. Der alte Synth-Schlag ist nur noch Fallback.
+- Gilt fuer beide Seiten, auch im Spieler-gegen-Spieler. Die Treffer anderer Einheiten auf grosse Einheiten sind unveraendert.
+
+Geprueft
+- Im Chromium: Karte am PC (2000x1000) und Handy (411x890), untere Leiste ausgeblendet, Beute in der Info; die 8 Schlaege werden dekodiert und die Wiedergabe laeuft. Keine Konsolenfehler. Den Klang selbst im Spiel habe ich nicht gehoert.
+
+Offen (Vorschlaege folgen): fraktionsspezifische Upgrades.
+
+=====================================================
+v0.33
+=====================================================
+Spieler gegen Spieler: rechte Seite korrigiert
+- Die Einheiten-Leiste rechts ist gespiegelt (Einheit 1 ganz aussen rechts). Die Pfeiltasten gingen deshalb in die falsche Richtung. Jetzt wandert die Auswahl mit Pfeil links tatsaechlich nach links und mit Pfeil rechts nach rechts. Dasselbe gilt fuer die Pfeil-Tasten im rechten Handy-Bedienfeld.
+- Die rechte Leiste zeigt jetzt wie die linke die Ziffern 1 bis 8 (Ziffernblock), 1 ist die Einheit ganz aussen.
+
+Geprueft
+- Im Chromium: Pfeiltasten und Touch-Pfeile verschieben die Markierung rechts in die sichtbar richtige Richtung, Auswahl links (A/D) unveraendert. Keine Konsolenfehler.
+
+=====================================================
+v0.32
+=====================================================
+Spieler gegen Spieler: Einheiten selbst waehlen
+- Die Umschalter "Alle Einheiten" und "Nur Basis-Einheiten" sind weg. Stattdessen waehlt jeder Spieler seine Einheiten selbst: Haken in der Tabelle (Zeile antippen oder Haken setzen) oder Haken ueber jeder Figur im Streifen oben (Figur antippen). Abgewaehlte Einheiten sind abgedunkelt.
+- Das gilt fuer beide Schritte (Spieler 1 links, Spieler 2 rechts). Die Auswahl wird pro Seite und Volk gemerkt, auch beim Blaettern durch die Voelker. Vorgabe: alle Einheiten angehakt.
+- Zwei kleine Hilfsknoepfe "Alle auswaehlen" und "Alle abwaehlen" sparen das Einzelanklicken. Mindestens eine Einheit muss gewaehlt sein, sonst wackelt der Knopf "Waehlen" und es geht nicht weiter.
+
+Uebersichten
+- Der Zusatz "(Kampagne)" hinter den Einheiten ist aus allen Uebersichten entfernt (Fraktionen ansehen, Auswahl).
+
+Geprueft
+- Im Chromium: Einheiten per Haken und per Klick auf die Figur ab- und angewaehlt, "Alle abwaehlen" blockiert den Start, Schlacht startet mit genau den gewaehlten Einheiten beider Seiten. Keine Konsolenfehler.
+
+=====================================================
+v0.31
+=====================================================
+Spieler gegen Spieler (Schnelles Gefecht)
+- Neuer Modus "Spieler gegen Spieler" in der Auswahl des Schnellen Gefechts. Spieler 1 waehlt die linke, Spieler 2 die rechte Fraktion. Beide Seiten werden von Menschen gesteuert, es gibt keine KI. Zur Wahl: "Alle Einheiten" (alle Einheiten beider Voelker, gut zum Testen von Duellen) oder "Nur Basis-Einheiten" (die ersten sechs).
+- Tastatur, Spieler 1 (links): W/S Bahn, A/D Einheit waehlen, Leertaste oder E ruft die Einheit, Q oder linke Umschalttaste Ansturm, Ziffern 1 bis 8 rufen direkt.
+- Tastatur, Spieler 2 (rechts): Pfeil hoch/runter Bahn, Pfeil links/rechts Einheit waehlen, Enter ruft die Einheit, rechte Umschalttaste oder Ziffernblock 0 Ansturm, Ziffernblock 1 bis 8 rufen direkt.
+- P pausiert, F Vollbild wie bisher.
+- Spielfeld: Spieler 2 hat einen eigenen blauen Bahnzeiger am rechten Rand (bei bereitem Ansturm blinkend rot) und eine eigene hervorgehobene Bahn. Die Einheiten-Leiste rechts zeigt die Auswahl von Spieler 2.
+- Handy: zwei Bedienfelder (links fuer Spieler 1, rechts fuer Spieler 2) mit Bahn hoch/runter, Einheit links/rechts, Rufen und Ansturm. Zusaetzlich: Bahn durch Tippen auf die eigene Haelfte des Spielfelds waehlen und Einheiten direkt oben in der eigenen Leiste antippen. Am Rand der eigenen Seite bei bereitem Ansturm den roten Pfeil antippen.
+- Ende: "Spieler 1 siegt" / "Spieler 2 siegt" statt Sieg/Niederlage; der Knopf unten heisst "Beenden" statt "Aufgeben".
+- Anleitung ergaenzt, englische Texte ergaenzt.
+
+Geprueft
+- Im Chromium: Auswahl per Klick durchgespielt, beide Seiten per Tastatur gesteuert (Bahn, Einheit, Rufen, Ziffernblock), beide Seiten gleichzeitig; Touch-Layout mit beiden Bedienfeldern angesehen. Keine Konsolenfehler. Echte zwei Spieler an einer Tastatur und ein echtes Handy habe ich nicht ausprobiert.
+- Bekannte Grenze: Viele Tastaturen erkennen nur eine begrenzte Zahl gleichzeitig gedrueckter Tasten. Wenn beide Spieler gleichzeitig mehrere Tasten halten, kann eine ausfallen.
+
+=====================================================
+v0.30
+=====================================================
+Waffen-Skins, Teil 2
+- Orkkriegsherr: statt des Rechtecks jetzt eine Dornenkeule: eisenbeschlagener Kopf mit Stacheln rundum, Schaedel am Griff.
+- Zweihandhammer (Eisenbrecher der Zwerge, Paladin der Menschen): massiver Kopf quer zum Stiel mit abgeschraegten Kanten, Metallband und goldener Raute. Der Kopf sitzt jetzt richtig herum.
+- Kriegshammer (Hammertraeger, Thane): Kopf quer zum Stiel, helle Schlagflaeche vorn, Dorn hinten.
+- Hammerwerfer: Wurfhammer in der Hand mit derselben Kopfform wie der Kriegshammer.
+- Hainwaechter (Elfen): Die Glefe hat jetzt eine breite, geschwungene Blattklinge mit goldener Huelse statt der kaum sichtbaren Klinge. Die Schneide zeigt nach vorn.
+
+Geprueft
+- Im Chromium alle Posen von Kriegsherr, Eisenbrecher, Thane, Hammerwerfer, Hainwaechter und Paladin gerendert und eine Schlacht Orks gegen Zwerge angesehen; keine Konsolenfehler.
+
+=====================================================
+v0.29
+=====================================================
+Waffen-Skins korrigiert
+- Hellebarde: Die Beilklinge zeigte nach hinten, jetzt zeigt sie nach vorn, der Haken sitzt hinten, die Spitze oben. Dazu Konturen, Glanzkante und Huelse.
+- Aexte (Axtschwinger, Axtkaempfer, Eisenwaechter, Eberreiter, Wolfsreiter, Schaedelbrecher usw.): Die Schneide zeigte nach hinten, jetzt zeigt sie beim Hochnehmen und beim Zuschlagen nach vorn. Der Kopf ist neu gezeichnet: Bartaxt mit geschwungener Schneide, Huelse und Nacken auf der Rueckseite. Die Doppelaxt (Eisenwaechter, Schwarzork) hat zwei Klingen.
+- Axtwerfer: Die Axt in der Hand zeigt die Schneide ebenfalls nach vorn.
+
+Ghul ueberarbeitet
+- Neue Krallen: knorrige Hand mit vier kurzen, kraeftigen, gebogenen Krallen statt der langen Haken. Beide Haende haben jetzt Krallen (vorher nur eine).
+- Neuer Kopf: laenglicher Schaedel, hohle Wangen, dunkle Augenhoehlen mit gelb leuchtenden Augen, offenes Maul mit Fangzaehnen, Spitzohr und wenige Haarstraehnen.
+- Koerper etwas kraeftiger, zerrissener Lendenschurz und Wundflecken. Haltung bleibt gebueckt.
+
+Geprueft
+- Im Chromium alle Posen (Stehen, Laufen, Zuschlagen) von Hellebardier, Axtschwinger, Axtkaempfer, Eisenwaechter und Ghul gerendert und in einer Schlacht Untote gegen Menschen angesehen; keine Konsolenfehler. Auf einem echten Handy nicht getestet.
+
+=====================================================
+v0.28
+=====================================================
+Hauptstadt: wer wird vom Upgrade betroffen?
+- Bugfix: "Wirkt auf" war z.B. beim Schildwall leer. Jetzt wird fuer jedes Upgrade geprueft, welche Einheiten deines Volkes wirklich betroffen sind, und genau diese stehen dort.
+- Neu: Das gewaehlte (oder angefahrene) Upgrade rahmt die betroffenen Einheiten im Heer golden ein, auch noch nicht gekaufte.
+- Scharfer Stahl wirkt nur noch auf Einheiten mit Stahlwaffen (Schwert, Speer, Axt, Reiter, Schwere), nicht mehr auf Bogen und Magier. Der Bonus bleibt +6 % je Stufe.
+- Das Upgrade-Menue blendet Upgrades aus, die auf keine Einheit deines Volkes wirken.
+
+Upgrades
+- "Trank der Rast" ist entfernt.
+- Heilende Magie hat jetzt 3 Stufen: Magier heilen Einheiten in ihrer Bahn im Umkreis von 16 % des Feldes mit 0,5 / 1,0 / 1,5 % Leben pro Sekunde (nicht stapelnd mit mehreren Magiern).
+
+Handy: Ansturm-Knopf
+- Der Knopf ist aktiv (rot, blinkend), sobald 15 Gegner besiegt sind, auch wenn die Wartezeit der gewaehlten Einheit noch laeuft. Ausgeloest wird der Ansturm aber nur, wenn die gewaehlte Einheit bereit ist (wie bisher).
+
+=====================================================
+v0.27
+=====================================================
+Karte
+- Alle angreifbaren Gebiete zeigen gekreuzte Schwerter (neben der Prozentzahl). Das gewaehlte Gebiet leuchtet zusaetzlich. Der Reiter "Angreifen" mit Schlachtruf bleibt unveraendert.
+- Hauptstadt-Knopf und Gold-Plakette sitzen jetzt linksbuendig neben "Menue" und Vollbild.
+
+Hauptstadt-Fenster
+- Am PC deutlich groesser (Symbole, Reiter, Schrift, Beschreibung, Kaufknopf); die Groesse richtet sich nach der Fensterhoehe.
+- Gold steht nicht mehr im Fenster (nur noch oben).
+- Der Abschnitt "Schmiede" heisst jetzt "Werkstaetten" (Waffenschmiede, Ruestungsschmiede, Hofschmiede, Alchemie).
+
+Neue Upgrades (7), alle mit echter Wirkung im Kampf
+- Waffenschmiede: Wetzstein (Nahkaempfer: 4 % Chance je Stufe auf Doppelschaden).
+- Ruestungsschmiede: Lederkoller (Bogen, Armbrust, Magier: +6 Ruestung je Stufe).
+- Hofschmiede: Schnellspanner (Bogen/Armbrust: 6 % kuerzere Schusspause je Stufe), Lanzenspitzen (Reiter: +12 % Schaden beim ersten Aufprall je Stufe).
+- Alchemie: Seherglas (Magier: +8 % Reichweite je Stufe), Heilende Magie (nur 1 Stufe: Magier heilen Einheiten in ihrer Bahn im Umkreis von 16 % des Feldes mit 1 % Leben pro Sekunde, wirkt nicht stapelnd), Trank der Rast (alle Einheiten regenerieren 0,4 % Leben pro Sekunde je Stufe, 3 Stufen).
+- Upgrades koennen jetzt eine eigene Maximalstufe haben (Anzeige: Punkte und "Stufe x / y").
+- Kosten sind nur Platzhalter, die Verteilung kommt mit der Balance.
+- Getestet: Heilung wirkt, Kampf laeuft mit allen neuen Werten durch.
+
+=====================================================
+v0.26
+=====================================================
+Kampagnenkarte: Angreifen
+- Angreifbare Gebiete zeigen zwei Schwerter, nicht gekreuzt (neben der Prozentzahl).
+- Tippst du ein Gebiet an, kreuzen sich die Schwerter (leuchtend) und direkt am Gebiet erscheint ein Reiter "Angreifen" mit dem Schlachtruf deines Volkes darunter:
+  Menschen "Fuer die Krone!", Elfen "Fuer den Hain!", Orks "Blut und Beute!", Zwerge "Fuer Berg und Bart!", Untote "Der Tod holt euch!".
+- Ein Klick auf den Reiter startet den Angriff (Tastatur: Leertaste). Die untere Leiste zeigt nur noch Schwierigkeit und Beute.
+
+Kopfleiste der Karte
+- Neuer Vollbild-Knopf (Rechteck-Symbol) neben "Menue".
+- Hauptstadt-Knopf: Burg mit Wimpel und Wappenschild in Voelkerfarbe (je Volk ein eigenes Zeichen). Die einzelne Flagge ist weg.
+- Gold: eigene Plakette mit Schatztruhe rechts oben, deutlich groesser, leuchtet kurz auf, wenn sich der Betrag aendert.
+
+Schmiede mit vier Reitern (Hauptstadt-Fenster)
+- Waffenschmiede: Scharfer Stahl (alle), Klingenmeister, Schlagkraft, Speerdrill.
+- Ruestungsschmiede: Plattenpanzer (alle), Schildwall, Riesenstaerke.
+- Hofschmiede: Bogenmacher (Bogen/Armbrust), Sattler und Hufschmied (Reiter).
+- Alchemie: Zeitelixier (kuerzere Wartezeit, vorher "Drill"), Windtrunk (Tempo, vorher "Gewaltmarsch", neues Flaschen-Symbol), Heiltrank (Leben, vorher "Verpflegung"), Arkane Essenz (Magier, vorher "Magiestudien").
+- Reiter zeigen die Zahl der gekauften Stufen, darunter eine kurze Zeile zum Flair. Reiter ohne passende Einheiten (z.B. Bogen beim Volk ohne Schuetzen) werden ausgeblendet.
+- Tastatur: W/S erreicht auch die Reiter, Leertaste kauft wie bisher.
+- Wirkung und Preise der Upgrades unveraendert, nur Namen und Ordnung.
+
+Annahmen (bitte pruefen): Zuordnung der Upgrades zu den Reitern, neue Namen, die Schlachtrufe, Wappenzeichen je Volk.
+
+=====================================================
+v0.25
+=====================================================
+Angleichung PC / Handy (Hochformat) / Vollbild
+- Die Schlacht-Simulation ist jetzt auf allen Geraeten identisch: gleiche Feldbreite, gleiches Lauftempo, gleiche Reichweiten (Prozent des Feldes), gleiche Zeit. Balance-Tests sind damit geraeteuebergreifend vergleichbar.
+- Folge: Die v0.24-Reichweitenskalierung am PC (4x) und die dazugehoerige Schadensverringerung der Fernkaempfer entfallen, es gilt ueberall der Handy-Wert. Die Fernkampf-Werte aus v0.24 (Schaden der Einheiten) bleiben unveraendert und sind ein Thema fuer die spaetere Balance.
+- Schriftgroessen der Schlacht-Oberflaeche sind einheitlich (Namensschild fest, kleiner).
+
+Schlacht-HUD am Handy
+- Einheitenname oben deutlich kleiner und fest positioniert: die Symbole verschieben sich nicht mehr, egal welche Einheit gewaehlt ist (gilt auch am PC).
+- Gegner-Symbole (z.B. Hauptstadt mit vielen Einheiten) laufen in zwei Reihen.
+- Eigene Symbole ca. 25-30 Prozent groesser.
+
+Handy-Steuerung
+- Hoch/Runter-Pfeile bleiben, transparenter.
+- Darunter ein grosser halbtransparenter Knopf "Rufen" (ruft die gewaehlte Einheit).
+- Darunter ein kleiner Knopf "Ansturm": ausgegraut, bis moeglich, dann aktiv (rot, blinkt).
+- Ganz unten Links/Rechts-Pfeile zur Einheitenwahl, im Stil der Hoch/Runter-Pfeile.
+
+PC
+- Der Pfeil, aus dem die Einheiten kommen, ist groesser.
+- Das "Q" erscheint nur, wenn der Ansturm moeglich ist (zusammen mit dem roten Leuchten); dann waechst der Pfeil und pulsiert.
+
+Tastatur (alle Bildschirme)
+- WASD / Pfeiltasten bewegen, Leertaste bestaetigt, Esc geht zurueck.
+- Nach der Schlacht: Leertaste zurueck zur Karte.
+- Karte: WASD waehlt Gebiete, Leertaste oeffnet Hauptstadt bzw. bestaetigt Angriff.
+- Hauptstadt: WASD waehlt Kacheln, Leertaste kauft/aktiviert, Esc schliesst.
+- Menues, Auswahl und Dialoge: WASD bewegt den Fokus, Leertaste bestaetigt; bei Voelkerwahl A/D.
+- Neu in der Anleitung (DE/EN).
+
+Hauptstadt-Fenster am Handy
+- Neues Layout: Armee und Schmiede oben (kompakt), Beschreibung und Kauf-Knopf darunter, nichts mehr abgeschnitten.
+
+Kampagnen-Kopf
+- Der Text "Menschenbund 8/40 Gebiete" ist weg; stattdessen ein kleiner Wimpel in der Voelkerfarbe (Name beim Darueberfahren).
+
+Annahmen (bitte pruefen): Gegner zwei Reihen ab mehr als 5 Einheiten; eigene Symbole ca. +24 Prozent; Wimpel-Farbe = Voelkerfarbe.
+
+Naechster Schritt (von dir verschoben): Gameplay-Balance, jetzt wo alles angeglichen ist.
+
+=====================================================
+v0.24
+=====================================================
+Fernkaempfer (Bogen, Armbrust, Buechse, Wurfwaffen, Magier)
+- Die Reichweite folgt jetzt dem Lauftempo: am PC 4x, am Handy unveraendert, dazwischen fliessend. Ursache des Problems: Am PC laufen die Nahkaempfer dreimal so schnell (v0.10), die Fernkaempfer konnten aber nicht dreimal so weit schiessen. Sie hatten dort nur ein Drittel der Zeit zum Schiessen wie am Handy.
+- Damit Fernkaempfer dadurch nicht uebermaechtig werden, sinkt ihr Schaden mit der Reichweite leicht (am PC etwa -26 Prozent, am Handy keine Aenderung).
+- Menschen: Bogenschuetze 7 -> 8,8 Schaden, Armbrustschuetze 19,5 (vorher 16), Hofmagier 23 (vorher 20). Orks: Speerwerfer 10,4 (vorher 11,8), Axtwerfer 13,2, Schamane 15,8 (vorher 17,6). Elfen: Fernkampf-Bonus 12 -> 6 Prozent. Buechsenschuetze: Basis-Reichweite wieder 600, weil die Skalierung sie am PC ohnehin weit bringt.
+- Getestet mit KI gegen KI (PC- und Handy-Format): Am PC entspricht die Staerke der Fernkaempfer jetzt etwa dem, was sie vorher am Handy hatten. Elfen und Orks bleiben im Fernkampf stark, Menschen eher schwach.
+
+Ansturm
+- Die Schaltflaeche und der Zaehler (Ansturm x/15) sind weg.
+- Der Pfeil links wird rot und blinkt leicht, sobald der Ansturm moeglich ist (15 Gegner besiegt UND die Wartezeit der gewaehlten Einheit ist abgelaufen). Am PC steht ein Q im Pfeil: Q loest den Ansturm sofort mit der gewaehlten Einheit aus. Am Handy den roten Pfeil antippen.
+- Nach dem Ansturm beginnt die Wartezeit der Einheit wie nach einem normalen Rufen von vorne. Der Ansturm geht nur bei abgelaufener Wartezeit. Das gilt auch fuer die KI.
+
+KI
+- Verteidigung: Wird die KI bedroht oder liegt sie zurueck, wartet sie nicht mehr auf eine langsame Einheit, sondern ruft die beste, die (fast) bereit ist.
+- Schnelle Einheiten werden von der KI deutlich haeufiger gewaehlt (vorher fast nur schwere mit langer Wartezeit).
+- Hinweis: Schnelle Einheiten sind pro Sekunde Wartezeit stark (viele Einheiten schlagen wenige grosse). Das ist ein Balance-Thema der einzelnen Voelker, das die KI nur teilweise ausgleichen kann.
+
+=====================================================
+v0.23
+=====================================================
+Schlachtmusik: Wikinger-Schlachtlied (Mark Murray)
+- Neues Schlachtstueck, das die ganze Schlacht ueber laeuft. Es besteht aus vier Loops, die je nach Lage zum naechsten Taktanfang ineinander ueberblendet werden:
+  Aufmarsch: ab Schlachtbeginn bis zum ersten Kontakt (erster Nahkampf-Schlag, Schuss oder Einheit auf der anderen Seite).
+  Kampf: danach.
+  Durchbruch: 16 s lang, nachdem eine Einheit die andere Seite erreicht hat (dem Ton).
+  Entscheidung: sobald eine Seite nur noch 1/3 des Balkens hat oder nur noch 30 s auf der Uhr sind.
+- In der Musik-Auswahl steht nur ein Eintrag: Wikinger-Schlachtlied (Mark Murray, 1:30, Vorhoeren spielt alle vier Stufen hintereinander). Die einzelnen Loops sind dort nicht einzeln waehlbar.
+- Standard: Schlacht spielt bei allen Fraktionen das Wikinger-Schlachtlied (vorher Synth). Wer schon eine eigene Auswahl gespeichert hat, bekommt es einmalig am Ende jeder Schlacht-Liste angehaengt. Ohne Haken spielt weiter die Synth-Musik.
+- Lautstaerke wie die uebrige Dateimusik, Schlacht weiter 3 dB leiser (BATTLE_GAIN). Sinkt bei Fanfaren, folgt dem Regler Musik, pausiert im Hintergrund-Tab.
+
+Tempostufen (Spannung)
+- Tempo springt in zwei Stufen, keine langsame Rampe: +10 % und +20 %. Die Tonhoehe bleibt gleich, weil jede Stufe in drei fertig gerechneten Fassungen (100, 110, 120 %) in der Datei liegt. Der Wechsel passiert zum naechsten Taktanfang mit kurzer Ueberblendung.
+- Regeln, es gilt immer der hoechste Wert (nichts wird addiert), in allen Stufen auch im Aufmarsch:
+  Eine Seite hat nur noch 1/3 des Balkens (Balken <= 33 oder >= 67): +10 %.
+  Eine Seite hat nur noch 1/9 des Balkens (<= 11 oder >= 89): +20 %.
+  Nur noch 30 s auf der Uhr: +10 %.
+- Erholt sich der Balken, geht das Tempo zum naechsten Taktanfang zurueck. Damit es an der Schwelle nicht hin- und herspringt, gilt eine kleine Toleranz: Stufe +10 % endet erst bei Balken 38 bzw. 62, Stufe +20 % bei 16 bzw. 84.
+
+Weitere Aenderungen
+- Der Ton, wenn eine Einheit die andere Seite erreicht, ist 6 dB leiser (Faktor 0,5).
+
+Technisches
+- Datei: kriegsherr_v0.23.html (rund 37 MB). Spielstaende aus v0.22 bleiben lesbar. Neue Bloecke: vk (JSON, 12 Loops als MP3 mit 96 kbit/s, rund 3,2 MB) und mus_battle_viking (Vorhoer-Fassung und Fallback als normale Datei). Die Loops laufen ueber Web Audio (decodeAudioData wie die Fanfaren), nicht ueber die Audio-Elemente. Dekodiert wird erst beim Schlachtstart (Aufmarsch zuerst), Tempofassungen bei Bedarf; nach der Schlacht wird der Speicher freigegeben. Bei Dekodierfehler spielt das Stueck als normale Datei.
+- Code: Modul VK (vkStart, vkStop, vkTick, vkDecide, vkEv) im Musikteil, eingehaengt in fmSwitch, fmTick, updHud und die Ereignisschleife. Stufen-Logik und Schwellen stehen in vkDecide und vkLv. Musik-Auswahl-Migration OPT.musv=22.
+- Loops: Viking-Lied ca. 120 BPM, ein Takt 2,0042 s, alle Stufen auf demselben Raster (8 bzw. 16 Takte). Tempofassungen mit Rubberband gestreckt, Abweichung zum Original unter 6 ms.
+- Getestet im Chromium: Schlacht mit 4-fach-Tempo (Aufmarsch, Durchbruch, Entscheidung 110 und 120 %, Rueckkehr, 30-s-Regel, Stopp beim Verlassen), Musik-Auswahl-Eintrag, Migration, keine Konsolenfehler. Der Klang wurde nicht auf einem echten Geraet beurteilt, besonders die Ueberblendungen und der Speicherbedarf am Handy (bis etwa 90 MB dekodiert in langen Schlachten) bitte pruefen. Safari und Firefox ungetestet.
+- Quelle (Freesound): Mark Murray, 723857. Lizenz vor einer Veroeffentlichung pruefen.
+
+=====================================================
+v0.22
+=====================================================
+Kampfbildschirm
+- Die Einheiten stehen jetzt oben im Feld: eigene links, die des Gegners rechts. Jede Einheit ist ein runder Knopf mit rundem Cooldown ohne Zeitangabe, die Figur steht im Kreis und ragt darueber. Die gewaehlte Einheit ist rot.
+- Beim Gegner sieht man ebenfalls den Cooldown und welche Einheit er gerade als naechste ruft (rot, mit Name unter der Leiste).
+- Die Leiste unten und die Einheitenbeschreibung sind weg. Es steht nur noch der Name der gewaehlten Einheit unter der Leiste. Das Feld bekommt dadurch mehr Platz.
+ 
+Kampagne
+- Keine Reiter mehr (Karte, Heer, Schmiede). Die Karte ist immer da.
+- Neue, groessere Karte mit Meer rundherum und neun Lavainseln (Vulkane, Glut, Rauch). Beim Herauszoomen bleibt die Karte immer bildfuellend.
+- Heer und Schmiede liegen in der Hauptstadt: Tippe auf die eigene Hauptstadt (oder den Knopf Hauptstadt oben). Unten ueber der Karte oeffnet sich ein Bereich, das Fenster wird nicht groesser. Links Heer und Schmiede als Symbole, rechts die Beschreibung wie in einer Enzyklopaedie (am PC beim Darueberfahren, am Handy per Antippen), darunter der Knopf zum Kaufen.
+- Schmiede und Verbesserungen haben Symbole statt Text, mit Stufenpunkten.
+- Beim Kaufen ertoenen Schmiedeschlaege (synthetisch, ein Sample kann spaeter eingesetzt werden: Kategorie smith).
+ 
+Einheiten und Balance
+- Neue Einheiten: Axtwerfer (Orks, Zwerge) und Hammerwerfer (Zwerge). Die Wurfwaffen fliegen als rotierende Axt bzw. Hammer.
+- Orks sind groesser: Grunzer, Axtschwinger und Schwarzork etwas, Troll und Kriegsherr gewaltig, Eberreiter und Wolfsreiter groesser.
+- Wolfsreiter staerker (Leben +10 Prozent, Schaden +5 Prozent, mehr Tempo und Ruestung), Wolf neu gezeichnet (Maehne, Ohren, offenes Maul mit Zaehnen). Eberreiter etwas staerker.
+- Menschen: Reiter kostet 600 (vorher 900), ist schneller (102) und kommt frueher. Ritter kostet 1100, ist langsamer (76). Hellebardier und Armbrustschuetze etwas mehr Schaden.
+- Buechsenschuetze: Reichweite 600 -> 1150, dafuer 10 Prozent weniger Schaden.
+- Ghul: etwas schwaecher (Leben und Schaden minus 5 Prozent, Ruestung 9, Tempo 58). Neue Krallen (lang, gekruemmt) und krummerer Gang.
+- Balance (KI gegen KI, 40 Durchlaeufe): Menschen sind am Anfang gegen Orks schwaecher und holen mit spaeteren Einheiten auf. Die Schwierigkeitsanzeige der Kampagne (Menschen gegen Orks, Orks gegen Elfen, Untote gegen Menschen und weitere) wurde angepasst.
+- Skins: Axt jetzt als Bartaxt (Doppelaxt fuer Schwarzork und Eisenwaechter). Kein Skin kommt mehr doppelt in einer Fraktion vor (nur Reiter duerfen sich aehneln). Neue Kopfbedeckungen: Feder, Stirnband, Kettenhaube, Irokese, Fellmuetze.
+ 
+Fehler behoben
+- Das Horn zu Schlachtbeginn hat im Browser einen Fehler ausgeloest (stop vor start) und ist nie erklungen. Jetzt klingt es 3,6 Sekunden.
+ 
+Technisches
+- Datei: kriegsherr_v0.22.html. Spielstaende aus v0.21 bleiben lesbar (neue Einheiten sind dort zunaechst nicht gekauft).
+ 
+=====================================================
+v0.21 
+=====================================================
+Sound: Stabilitaet auf dem Handy
+Ursache (gemessen in einer simulierten Schlacht): Wenn fuer die Schlacht keine Musikdatei gewaehlt ist, laeuft die Synth-Schlachtmusik. Dort lief das Vibrato von Floete, Orgel und Chor pro Note 20 Sekunden lang weiter, auch wenn die Note nur eine halbe Sekunde klang. Dadurch klangen bei Untoten bis zu 82 und bei Elfen bis zu 75 Oszillatoren gleichzeitig (plus Hall, plus Kampfgeraeusche). Das ueberlastet den Audio-Thread eines Handys: Knacksen, Ruckeln, Aussetzer.
+
+- Vibrato endet jetzt mit der Note. Gleichzeitige Oszillatoren in der Schlachtmusik: Untote 82 -> 35, Elfen 75 -> 45 (Desktop). Der Klang bleibt gleich.
+- Handy-Modus (automatisch bei Touch-Geraeten): groesserer Audio-Puffer (latencyHint playback), Hall kuerzer und einkanalig (1,1 s statt 2,2 s stereo), leichtere Synth-Stimmen (ein statt zwei Saegezaehne bei Streichern, Blech und Horn, zwei statt drei beim Chor), Zierstimmen (Zupfen, Glocken, Fife) entfallen bei zu vielen klingenden Noten, hoechstens 12 Samples gleichzeitig. Gleichzeitige Oszillatoren damit: Untote 24, Elfen 39, Menschen 13, Orks 16, Zwerge 18.
+- Laengerer Planungsvorlauf der Synth-Musik am Handy (1,2 s statt 0,5 s, Takt 200 ms statt 120 ms). Ein kurzes Haengen des Browsers hinterlaesst keine Luecken mehr in der Musik.
+- Hall wird nur noch angelegt, wenn die Synth-Musik ihn braucht (bei Dateimusik nie).
+- Wachhund: Wenn das System den Ton anhaelt oder unterbricht (zum Beispiel Benachrichtigung, Anruf, iOS interrupted), weckt das Spiel ihn wieder auf, auch waehrend der Schlacht. iOS: Audio-Sitzung auf playback gesetzt, damit Musik und Effekte zusammen laufen.
+- Musik-Lautstaerke des Audio-Elements wird nur noch geschrieben, wenn sich der Wert aendert (vorher 25 Mal pro Sekunde).
+- Stoppt die Musik, werden vorausgeplante Noten ausgeblendet und klingen nicht mehr nach.
+
+Technisches
+- Datei: kriegsherr_v0.21.html. Spielstaende aus v0.20 bleiben lesbar.
+- Nicht geaendert: Die Schlacht nutzt weiter Synth-Musik, solange in den Optionen keine Dateien dafuer gewaehlt sind. Dateimusik belastet das Handy deutlich weniger.
+
+=====================================================
+v0.20
+=====================================================
+Menuemusik
+- Beim Start des Spiels spielt im Hauptmenue immer zuerst Der Hornruf (das Haupttheme der Menschen).
+- Kehrt man aus der Kampagne (oder aus einer Schlacht ueber die Karte) ins Hauptmenue zurueck, startet ein neues, zufaellig gewaehltes Stueck von vorne, nie das zuletzt im Menue gespielte. Vorher lief das alte Menuestueck an der Stelle weiter, an der es aufgehoert hatte.
+- Unveraendert: Wechsel zwischen Hauptmenue, Optionen und Musik-Auswahl unterbricht die Musik nicht. Die Kampagnenkarte macht nach einer Schlacht weiter, wo sie war.
+
+=====================================================
+v0.19
+=====================================================
+Vier neue Kampagnenlieder
+- Gruft der Moenche (Untote, Haupttheme), Der verfluchte Hain (Untote), Donner der Horde (Orks, Haupttheme), Gesang der Tiefe (Zwerge). Urheber in der Musik-Auswahl: "Mix aus Freesound-Stuecken". Je rund 75 s, 96 kbit/s, auf etwa -21 LUFS abgeglichen.
+- Standardzuordnung Kampagnenkarte: Untote spielen jetzt 6 Stuecke (neu: Gruft der Moenche, Der verfluchte Hain), Orks 4 (neu: Donner der Horde), Zwerge 4 (neu: Gesang der Tiefe), Menschen 5 (neu in der Liste: Der Hornruf). Elfen unveraendert (Waldlichtung war schon dabei).
+- Wer schon eine eigene Musik-Auswahl gespeichert hat, bekommt die neuen Stuecke einmalig am Ende der betroffenen Listen angehaengt.
+
+Haupttheme je Fraktion
+- Menschen: Der Hornruf. Elfen: Waldlichtung. Orks: Donner der Horde. Zwerge: Realm of the Norse. Untote: Gruft der Moenche.
+- Betritt man die Kampagnenkarte (aus dem Menue, neue oder geladene Kampagne), spielt zuerst immer das Haupttheme der Fraktion, danach Shuffle wie bisher (nie dasselbe Stueck zweimal hintereinander). Kommt man aus einer Schlacht zurueck, geht die Karte dort weiter, wo sie war.
+- Alle Haupttheme laufen auch im Hauptmenue (Standard): neu in der Menueliste sind Donner der Horde, Realm of the Norse und Gruft der Moenche (Der Hornruf und Waldlichtung waren schon dabei).
+
+Keine Ueberblendung mehr
+- Stuecke laufen bis zum Ende, danach beginnt das naechste sofort (kein Ueberlappen mehr, vorher 3 s Crossfade).
+- Wechsel zwischen Menue, Karte und Schlacht: das alte Stueck blendet kurz aus, danach blendet das neue ein. Beide laufen nie gleichzeitig.
+
+Musikstart
+- Das Spiel versucht die Musik schon beim Start. Browser sperren das meistens, bis man etwas anklickt; dann erscheint unten ein kleiner Hinweis "Tippen oder Klicken startet die Musik", und die Musik startet beim ersten Tippen, Klicken oder Tastendruck (vorher nur bei Klick/Tippen, nicht bei Tastendruck).
+
+Technisches
+- Neue Bloecke mus_undead_5_gruft, mus_undead_6_hain, mus_orcs_4_horde, mus_dwarves_4_tiefe, eingetragen in MTR und MUSIC. Haupttheme stehen in der Konstante MAIN. Die Datei ist jetzt rund 31 MB gross.
+- Getestet im Chromium: Start ohne und mit Tastendruck, Haupttheme aller 5 Fraktionen, Liedende ohne Ueberlappung, Moduswechsel Karte/Menue, Migration einer gespeicherten Auswahl, keine Konsolenfehler. Der Klang wurde nicht auf einem echten Geraet beurteilt.
+
+=====================================================
+v0.18
+=====================================================
+Musik
+- Schlachtmusik ist 3 dB leiser (Faktor 0,708), sowohl die Synth-Musik als auch Dateimusik, falls fuer Schlacht Stuecke gewaehlt sind. Menue- und Kartenmusik bleiben unveraendert. Der Wert steht als BATTLE_GAIN im Musikteil.
+- Die Schlachtmusik ist weiterhin die Synth-Musik (zwei Stuecke je Fraktion), solange in der Musik-Auswahl unter Schlacht keine Dateien gewaehlt sind.
+
+=====================================================
+v0.17
+=====================================================
+Sechs neue Stuecke in der Musik-Auswahl
+- Neue, handkomponierte Lieder (Titel in der Musik-Auswahl, Urheber "Claude (synthetisch)"): Der Hornruf (Hauptmenue, d-Moll, heroisch, 1:26), Laute und Choral (Menschen, d-Dorisch, 1:33), Waldlichtung (Elfen, a-Dorisch im 3/4-Takt, Harfe, Gloeckchen, Vogelstimmen, 1:11), Kriegsgesang (Orks, d-Phrygisch, tiefe Hoerner, Herzschlag, 1:55), Halle unter dem Berg (Zwerge, c-Moll, spaeter Es-Dur, Maennerchor, Amboss, 1:41) und Totenglocke (Untote, fis-Moll im 3/4-Trauermarsch, Orgel, Glocke, Wind, 1:46).
+- Standardzuordnung: Hauptmenue spielt Fantasy-Grundmusik plus alle sechs neuen Stuecke. Jede Fraktion auf der Kampagnenkarte spielt ihre bisherigen Stuecke plus ihr neues Lied. Schlacht bleibt ohne Dateien (Synth).
+- Alles bleibt in der Musik-Auswahl aenderbar (Haken, Anhoeren, Standard). Wer schon eine eigene Auswahl gespeichert hat, bekommt die neuen Stuecke einmalig am Ende der betroffenen Listen angehaengt.
+- Shuffle: Im Hauptmenue und auf der Kampagnenkarte wird nach jedem Stueck zufaellig weitergeschaltet, nie dasselbe Stueck zweimal hintereinander. Der erste Titel beim Betreten ist ebenfalls zufaellig (ausser die Karte macht nach einer Schlacht dort weiter, wo sie war). Schlachtmusik laeuft wie in v0.16.
+- Lautstaerke auf die vorhandenen Stuecke abgeglichen (rund -21 LUFS), MP3 mit 96 kbit/s, vorne und hinten Stille geschnitten.
+
+Fanfaren bei Sieg und Niederlage
+- Schlacht-Sieg: Fanfare A. Schlacht-Niederlage: Fanfare B oder C im Wechsel (nie dieselbe zweimal hintereinander). Gilt auch fuer Ueberfaelle und Schnelles Gefecht.
+- Kampagne: Fanfare D, die laengste, fuer Kampagnen-Niederlage (Alles verloren) und den neuen Kampagnen-Sieg.
+- Neu: Kampagnen-Sieg. Gehoert dir das ganze Land, erscheint "Kampagne gewonnen" (der Spielstand wird danach wie bei "Alles verloren" geloescht).
+- Faerbung nach der Fraktion des Spielers: Menschen original mit Pauke, Elfen hoeher mit Glockenklang, Orks tiefer und angezerrt mit Toms, Zwerge etwas tiefer mit Ambossschlaegen, Untote deutlich tiefer und dumpfer mit Totenglocke. Die Niederlage ist zusaetzlich tiefer, gedaempft, sackt am Ende ab und hat Totenglocke und Herzschlag.
+- Waehrend einer Fanfare sinkt die Musik (Datei und Synth) kurz auf etwa 30 Prozent und kommt danach zurueck. Die Lautstaerke der Fanfare folgt dem Regler Kampfgeraeusche.
+- Fallback: Laedt eine Fanfare nicht, spielen die alten Synth-Sounds.
+
+Technisches
+- Die Lieder liegen als Bloecke mus_NAME und stehen in MTR und MUSIC (wie in v0.16 beschrieben). Die Fanfaren liegen als JSON-Block fan (A bis D, zusammen rund 0,6 MB), laufen ueber Web Audio (decodeAudioData wie die Effekte) und werden durch das Modul NM gefaerbt.
+- Die Datei wird dadurch rund 26,5 MB gross. Spielstaende und Optionen aus v0.16 bleiben lesbar.
+- Getestet im Chromium: Menue-Playlist mit 7 Stuecken, Shuffle ohne direkte Wiederholung, Kampagnenlisten aller 5 Fraktionen, Musik-Auswahl mit 20 Stuecken, Fanfaren mit Absenkung, Kampagnen-Sieg-Meldung, Migration der gespeicherten Auswahl, keine Konsolenfehler. Der Klang wurde noch nicht auf einem echten Geraet beurteilt.
+- Fanfaren-Quellen (Freesound): gertraut_hecher, cgeffex, tobyk, dylanthefish. Lizenzen vor einer Veroeffentlichung pruefen.
+
+=====================================================
+v0.16
+=====================================================
+Musik-Auswahl im Hauptmenue
+- Neuer Knopf Musik im Hauptmenue. Dort stehen alle 14 Stuecke mit Titel, Urheber und Laenge. Unter jedem Titel steht, wo es gerade laeuft (zum Beispiel: Menue, Kampagne mit Elfen und Untoten, Schlacht mit Orks) oder dass es nirgends laeuft.
+- Oben waehlt man den Bereich: Menue, Kampagne oder Schlacht. Bei Kampagne und Schlacht kommt die Fraktion dazu, damit jedes Volk seine eigene Liste hat. Mit dem Haken legt man fest, ob ein Stueck dort spielt. Die Auswahl wird gespeichert und bleibt nach dem Neuladen.
+- Mit dem Knopf links neben jedem Stueck hoert man es an (nochmal druecken = Stopp). Die laufende Musik pausiert dabei und geht danach weiter. Beim Verlassen der Seite endet die Vorschau.
+- Aenderungen an der Menue-Auswahl gelten sofort. Kampagne und Schlacht gelten beim naechsten Betreten.
+- Ohne Haken in einem Bereich spielt dort wie bisher die eingebaute Synth-Musik. Standard stellt die Auslieferungswerte wieder her: Menue = Fantasy-Grundmusik, Kampagne = die Listen aus v0.15, Schlacht = keine Dateien (Synth).
+- Neu moeglich: Schlachtmusik aus Dateien. Sie gilt fuer die Fraktion auf der linken Seite (in der Kampagne meist du) und wechselt bei jeder neuen Schlacht zum naechsten Stueck der Liste. Beim Kampfbeginn wird kurz aus- und eingeblendet, nach der Schlacht geht die Kartenmusik an der alten Stelle weiter.
+- Deutsch und Englisch sind uebersetzt (Titel, Hinweise, Fraktionsnamen).
+
+Technisches
+- Die Auswahl liegt in den Optionen unter mus (Menue, Kampagne je Fraktion, Schlacht je Fraktion). Fehlende oder unbekannte Eintraege fallen auf den Standard zurueck. Spielstaende und Optionen aus v0.15 bleiben lesbar.
+- Die Titelliste steht als MTR im Musikteil. Ein neues Lied braucht einen Block mus_NAME und einen Eintrag in MTR (und optional in MUSIC fuer die Standardzuordnung). Es taucht dann automatisch in der Musik-Auswahl auf.
+- Getestet im echten Browser (Chromium): Wiedergabe, Vorschau mit Pause und Fortsetzen, Speichern und Neuladen, Schlachtmusik aus Dateien, Rueckfall auf Synth, Englisch.
+
+=====================================================
+v0.15
+=====================================================
+Musik aus Dateien
+- Hauptmenue und alle Menues (ausser Kampagne und Schlacht) spielen die Fantasy-Grundmusik (rund 4:47) in Endlosschleife. Am Ende blendet sie in sich selbst ueber.
+- Die Kampagnenkarte spielt die Lieder der Fraktion des Spielers, der Reihe nach und am Ende wieder von vorn, mit 3 s Ueberblendung:
+  Menschen (3): Ritterburg, Gaukler und Spielleute, Militaerstueck.
+  Elfen (3): Harfen-Arpeggio, Elfenstimme, Ambient.
+  Untote (3): Ancient, Ach du lieber Augustin in Moll, Cembalo.
+  Orks (2): Marsch, Mittelalter-Mix. Zwerge (2): Realm of the Norse, Saltarello.
+  Orks und Zwerge sind Platzhalter, dort kommen dunklere bzw. passendere Stuecke nach.
+- Schlacht: unveraendert die Synth-Musik. Beim Kampfbeginn wird die Dateimusik in 0,15 s ausgeblendet. Nach der Schlacht geht das Stueck auf der Karte dort weiter, wo es aufgehoert hat. Zwischen Menue und Karte wird 1 s ueberblendet.
+- Fallback: Ist ein Stueck im Browser nicht abspielbar, wird es uebersprungen. Geht keines, spielt genau dort die bisherige Synth-Musik.
+- Der Regler Musik gilt auch fuer die Dateimusik, bei 0 pausiert sie. Wechselt man im Browser den Tab, pausiert sie ebenfalls.
+
+Technisches
+- Die 14 Stuecke liegen als Base64 in eigenen Bloecken (mus_NAME) in der Datei, MP3 mit 96 kbit/s, zusammen rund 11 MB. Die Datei wird dadurch rund 16,6 MB gross, bleibt aber eine einzelne HTML-Datei. Alle Stuecke sind auf gleiche Lautstaerke gebracht, vorne und hinten ist die Stille geschnitten.
+- Die Liste der Stuecke steht als MUSIC im Musikteil. Ein neues Lied braucht einen Block (mus_NAME) und einen Eintrag dort. Die Einstellungen (Ueberblendzeiten, Lautstaerke) stehen in FM.cfg.
+- Die Dateimusik laeuft ueber einfache Audio-Elemente, nicht ueber Web Audio. Grund: Beim Oeffnen per Doppelklick (file://) gibt es sonst Stille. Effekte und Synth-Musik bleiben unveraendert. Spielstaende aus v0.14 bleiben lesbar.
+- Quellen (Freesound-Nutzer): Gertraut Hecher, migfus20, g-14, Sonically Sound, zhr, the_ramdom_cheese, ElvenVoice, giangallegos, setuniman, hamsel, fallight. Lizenzen vor einer Veroeffentlichung pruefen.
+
+=====================================================
+v0.14
+=====================================================
+Sound: echte Geraeusche
+- Waffen kommen jetzt aus echten Aufnahmen. Schwert mischt drei Klangarten (Treffer, schwerer Klang, auf Schild), dazu Axt, Speer (Holztreffer), Keule und Hammer (Keule, tiefer), Bogen, Armbrust (Armbrustschuetze und Buechsenschuetze), Pfeil-Treffer. Speerwerfer und Pestschleuder bekommen den Luftzug des Speers. Magier, Klauen (Ghul) und die Grossen (Troll, Knochenriese) behalten ihren Synth-Klang, dazu kommen Stimmen.
+- Hoerner: Horn 2 fuer Menschen und Elfen, das Battle-Horn fuer Orks, Zwerge und Untote. Beim Schlachtbeginn gekuerzt auf 3,6 s, beim Ansturm in voller Laenge. Beim Ansturm der Orks folgen Bruellen und drei Grunzer, bei den Untoten ein langes Klagen.
+- Orks: Grunzen bei Treffern und beim Tod (haeufig), Troll und Kriegsherr bruellen. Reden und Lachen kommen sehr selten (mindestens 30 s bzw. 90 s Abstand).
+- Ghul: Knurren und Kreischen beim Angriff.
+- Skelette: Knochenklacker zusaetzlich zum Schwert, gelegentlich Rasseln, beim Spawn Rasseln, beim Tod faellt jedes zweite Skelett klappernd zusammen. Untote: sehr selten ein Klagen.
+- Kampf-Ambience: leiser Loop mit Rufen und Waffenlaerm waehrend der Schlacht. Blendet ein und aus und stoppt bei Pause, Ende und Verlassen der Schlacht.
+- Fallback: Fehlt eine Kategorie oder scheitert das Laden, spielen genau dort die alten Synth-Sounds. Neu als Synth: Armbrust und kleine Stimmen fuer Orks, Ghul und Skelette. Reden, Lachen und Klagen haben keinen Ersatz und bleiben dann stumm.
+- Der Regler Kampfgeraeusche gilt fuer alles. Es spielen hoechstens 22 Sounds gleichzeitig.
+
+Technisches
+- Die Sounds liegen als Datenblock in der Datei (84 Clips, rund 1,1 MB als MP3), das Spiel bleibt eine einzelne HTML-Datei. Datei: kriegsherr_v0.14.html. Spielstaende aus v0.13 bleiben lesbar.
+- Die Ereignisse Schlag, Schuss, Tod und Spawn kennen jetzt den Einheitennamen. Damit werden Armbrust, Speerwurf und Skelette erkannt.
+- Die neuen Stimmen heissen im Code vox, weil voice im Musikteil schon belegt ist.
+
+=====================================================
+v0.13
+=====================================================
+Musik
+- Der Wechsel zwischen Menuemusik, Schlachtmusik und Kampagnenmusik ist jetzt sofort: Die alte Musik wird in einem Sekundenbruchteil ausgeblendet (inklusive Hall), die neue startet ohne Verzoegerung. Vorher klang die alte Musik noch mehrere Sekunden nach und die neue setzte spaet ein.
+
+Gegner (KI)
+- Der Gegner reagiert auf deine Einheiten: Sobald du in einer Bahn mehr Staerke hast als er, schickt er mit hoher Wahrscheinlichkeit Verteidiger in genau diese Bahn und waehlt passende Gegenstuecke (Speere gegen Reiter, Schnelle und Fernkaempfer gegen Fernkaempfer, Schwere gegen Schwere). Dauerhaft Speertraeger in die Mittelbahn zu spammen funktioniert nicht mehr ohne Gegenwehr.
+- Messung (Test mit Gegner-Skill 0,22 bis 0,9, 40 s lang Speertraeger in eine Bahn): Anteil der Gegner-Einheiten in deiner Bahn vorher 27 bis 47 Prozent, jetzt 59 bis 82 Prozent. Der Kraeftebalken stand nach 40 s vorher bei 73 bis 83, jetzt bei 54 bis 65.
+- Schneller am Anfang: Die erste Entscheidung faellt nach 0,4 bis 1,6 s (vorher 1,2 bis 4,2 s), die Bedenkzeit vor jedem Ruf ist kuerzer (hoechstens etwa 1 s statt 3 s).
+- Die Wartezeiten der Einheiten gelten fuer die KI unveraendert, sie wird also nicht schneller als du, sie nutzt ihre Zeit nur besser.
+
+Kampagne: Schwierigkeit
+- Alle Gebiete sind etwas schwerer: Der Gegner-Skill startet am Rand bei 0,22 (vorher 0,14) und steigt pro Ring um 0,12 (vorher 0,13) bis maximal 0,92. Die Einheiten selbst sind nicht verstaerkt, nur das Verhalten.
+- Hauptstaedte sind jetzt echte Endgegner: Skill +0,35 (vorher +0,06) bis maximal 0,97 und vier freigeschaltete Einheiten mehr (bis zu allen 10). Damit liegt die angezeigte Schwierigkeit einer Hauptstadt klar ueber normalen Gebieten gleicher Tiefe. Man kann sie weiterhin frueh angreifen, aber das ist ein Wagnis; sicher wird es erst spaet. Die Belohnung bleibt hoch.
+
+Balance: Reiter und Speere
+- Speertraeger, Speerelf, Hellebardier, Dornenwaechter und andere Speereinheiten machen 10 Prozent weniger Schaden.
+- Der Bonus der Speere gegen Reiter sinkt von 1,8x auf 1,35x. Ein einzelner Speertraeger haelt keinen Reiter mehr auf.
+- Schwertkaempfer sind gegen Reiter etwas schlechter (10 Prozent weniger Schaden), Speere bleiben gegen Reiter besser als Schwerter. Das passt zu deinem Vorschlag: Schwert etwas schlechter, Speer etwas besser, Reiterei trotzdem staerker.
+- Reiter aller Voelker ausser den Menschen: 30 Prozent mehr Leben, 20 Prozent mehr Schaden, der erste Stoss (Ansturm beim Aufprall) 1,8x statt 1,5x. Menschen-Reiter: nur 10 Prozent mehr Leben und 5 Prozent mehr Schaden, der erste Stoss bleibt bei 2x.
+- Duell-Messung (Reiter gegen Speere, verbleibende Lebenspunkte): Menschen-Reiter gegen Speertraeger vorher 44 Prozent, jetzt 70 Prozent; gegen Hellebardier vorher 14, jetzt 49. Elfen-Hirschreiter verlor vorher gegen Speerelfen komplett, jetzt gewinnt er mit 39 Prozent Rest. Der Dornenwaechter (schwerer Elfen-Speer) schlaegt den Reiter weiterhin knapp.
+- Weil sich dadurch die Staerke der Voelker gegeneinander verschoben hat, wurden alle Fraktionen neu gegeneinander abgeglichen (40 Durchlaeufe, Ziel 50 Prozent). Leben und Schaden der ersten drei Einheiten bzw. der uebrigen Einheiten: Menschen 1,00 / 1,00, Elfen 0,99 / 1,06, Orks 0,61 / 0,96, Zwerge 0,68 / 0,91, Untote 1,37 / 1,15.
+
+Technisches
+- Datei: kriegsherr_v0.13.html. Spielstaende aus v0.12 bleiben lesbar.
+- Nicht im Browser getestet (Testumgebung ohne Browser): Skript-Syntax, Musikwechsel mit simuliertem Audio und alle Simulationen laufen fehlerfrei. Bitte Musikwechsel und Gegner am Handy kurz gegenpruefen.
+
+=====================================================
+v0.12
+=====================================================
+Steuerung am PC
+- A/D (oder Pfeil links/rechts) wechseln die gewaehlte Einheit in der Leiste unten, ohne sie zu rufen. Die Leertaste (oder Enter) ruft die gewaehlte Einheit in der gewaehlten Bahn. Vorher rief die Leertaste die zuletzt gerufene Einheit.
+- Tasten 1 bis 8 rufen weiterhin direkt eine Einheit. Die Hilfe im Spiel ist angepasst.
+- Dateiname ab jetzt mit Versionssuffix: kriegsherr_v0.12.html.
+
+=====================================================
+v0.11
+=====================================================
+Name
+- Das Spiel heisst jetzt Kriegsherr (vorher Heerfuehrer). Titel, Hauptmenue und Browser-Tab angepasst, englisch Warlord. Die Datei heisst kriegsherr.html. Hinweis: Die Ork-Einheit Kriegsherr hat denselben Namen.
+
+Lauftempo am PC
+- Einheiten laufen am PC bis zu dreimal so schnell wie bisher (inklusive Laufanimation). Am Handy bleibt alles wie in v0.10. Dazwischen steigt das Tempo gleichmaessig: bis 1000 Pixel Bildschirmbreite 1x, ab 1600 Pixel 3x.
+- Betrifft nur das Laufen. Angriffstempo, Wartezeiten, Reichweiten und Zeitlimit bleiben unveraendert. Die Vorspultasten (1x, 2x, 4x) wirken zusaetzlich darauf.
+
+=====================================================
+v0.10
+=====================================================
+Wartezeit
+- Keine Zeitangaben mehr: Die runde Uhr zeigt nur noch den schrumpfenden Sektor, in der Einheiten-Infozeile steht keine Wartezeit mehr.
+- Zeiten wieder deutlich kuerzer (in v0.8 waren sie zu lang und zu unausgewogen). Referenz fuer die ersten drei Einheiten jeder Fraktion: erste Einheit 2,0 s, zweite 2,4 s, dritte 2,8 s (Menschen: Speertraeger 2,0, Schwertkaempfer 2,4, Bogenschuetze 2,8).
+- Die uebrigen Einheiten richten sich nach ihrem Gewicht (gemessene Staerke, Duell-Simulation): z. B. Menschen Reiter etwa 5,5 s, Hellebardier etwa 4,2 s, Armbrust etwa 4,4 s, Hofmagier etwa 4,7 s, Gardist etwa 7 s, Ritter etwa 8 s, Paladin 10 s. In allen Fraktionen steigt die Zeit von links nach rechts in der Leiste.
+- Die Fraktionen wurden diesmal NICHT ueber unterschiedliche Wartezeiten, sondern ueber leicht angepasste Werte (Leben und Schaden aller Einheiten eines Volkes) abgeglichen, damit die Zeiten fuer alle gleich nachvollziehbar sind.
+
+Bogenschuetzen und Fernkampf
+- Reichweite von Bogen, Armbrust, Buechse und Wurfspeeren verdoppelt (z. B. Menschen-Bogenschuetze 220 auf 440, Armbrust 260, Elfen-Falkenschuetze 640). Magier unveraendert.
+- Mehr Pause zwischen den Schuessen (ca. 35 Prozent laenger als vorher im Basiswert). In der Pause gehen sie weiter nach vorn, bis der Gegner nur noch rund ein Drittel ihrer Reichweite entfernt ist. Dann bleiben sie stehen und schiessen weiter. So ergibt sich: schiessen, vorruecken, schiessen, vorruecken.
+- Schuesse koennen danebengehen. Die Trefferchance sinkt mit der Entfernung. Grundgenauigkeit: Boegen 80 Prozent, Elfen 85, Armbrust und Buechse 90, Wurfspeere 75, Knochenbogen 70 Prozent. Im Schnitt gehen etwa ein Viertel der Schuesse daneben. Verfehlte Pfeile fliegen sichtbar am Ziel vorbei, ohne Trefferton.
+- Magier treffen weiterhin immer.
+- Fraktions-Balance neu abgestimmt, getrennt fuer die ersten drei Einheiten und fuer die weiteren Einheiten (Leben und Schaden angepasst), damit Voelker mit 3 und mit 5 Einheiten ausgeglichen sind (in der Simulation alle zwischen 44 und 56 Prozent).
+
+=====================================================
+v0.9
+=====================================================
+Kampf
+- Ansturm braucht wieder 15 besiegte Gegner (Riesen zaehlen doppelt). Vorher 25, deshalb kam er praktisch nie.
+- Wartezeit-Anzeige ist jetzt eine runde Uhr (dunkler Sektor, der kleiner wird, mit Sekundenzahl in der Mitte) statt eines Balkens. Bereite Einheiten haben einen gruenen Rand.
+- Spielfeld waechst mit der Bildschirmbreite: Auf einem breiten Bildschirm (Vollbild, Querformat) ist das Feld logisch laenger (bis 4000 statt 1000 Einheiten), damit Einheiten auf dem Bildschirm gleich schnell wirken wie im Hochformat. Reichweiten und Einheitengroessen bleiben gleich. Ergebnis: im Vollbild laufen die Einheiten laenger, mehr Einheiten sind gleichzeitig im Feld, es gibt mehr Massenschlachten. Die Zeit pro Schlacht waechst mit (z. B. etwa 215 s bei 1100 Pixel Breite).
+- Wolfsreiter (Orks) staerker: 95 statt 75 Leben, 13 statt 11 Schaden. Fraktionen danach neu abgestimmt.
+
+Kampagne
+- Schwierigkeit ist jetzt FEST geskriptet und haengt nur von der Lage im Land ab (Abstand zu deiner Heimat). Aeussere Gebiete sind leicht, je tiefer im Landesinneren, desto schwerer. Die Gegner werden nicht mehr staerker, wenn du mehr Gebiete erobert hast oder staerker wirst.
+- Tiefere Gebiete geben der KI mehr Einheitentypen (aussen 3 bis 4, ganz innen bis 9 bis 10) und eine bessere Spielstaerke. Die Mischung bleibt pro Gebiet fest.
+- Die Prozentzahl (Schwierigkeit) ergibt sich aus Spielstaerke, Einheitenzahl, Volk des Gegners und Matchup deiner Fraktion gegen dieses Volk. Deine eigenen Einheiten zaehlen nicht mit. Aktuell etwa 13 bis 28 Prozent am Rand und bis etwa 80 Prozent im Inneren.
+- Beute haengt jetzt klar von der Schwierigkeit ab: 120 plus 8 mal Prozent Gold, Hauptstaedte plus 200 Gold. Beispiel: 20 Prozent gibt 280 Gold, 60 Prozent gibt 600 Gold. Die Beute steht vor dem Angriff in der Infoleiste. (Vorher: 150 + 300 mal Schwierigkeitswert + 8 mal Anzahl deiner Gebiete.)
+- Die Infobox oben links zeigt jetzt auch die Einheiten, die der Gegner in diesem Gebiet hat.
+- Die Voelker kaempfen auch untereinander: Nach jeder deiner Schlachten greift mit hoher Wahrscheinlichkeit ein Volk ein Nachbargebiet eines anderen an (nicht deine Gebiete). Du kannst zuschauen (richtige Schlacht, KI gegen KI) oder ueberspringen (wird sofort ausgerechnet). Grenzen aendern sich entsprechend.
+- Alte Spielstaende werden weiter geladen und bekommen die neue feste Staerke.
+
+Sprache
+- Das Spiel gibt es jetzt auf Deutsch und Englisch. Umschalten unter Optionen, beim ersten Start richtet es sich nach der Browsersprache. Alle Menues, Einheiten, Fraktionen, Gebiete, Texte und die Anleitung sind uebersetzt.
+
+Musik
+- Komplett neue Musik. Jede Fraktion hat ein eigenes Kampagnen-Thema und zwei eigene Schlachtstuecke, die sich abwechseln. Das Hauptmenue hat sein eigenes Stueck. In der Kampagne spielt die Karte das Thema deiner Fraktion, Schlachten die Schlachtmusik deiner Fraktion.
+  Menschen: mittelalterlich, Laute/Harfe, Floete, Blech und Marschtrommeln, im Kampf Fanfaren und Pfeife.
+  Elfen: waldig, Harfe, Floete, Glockenspiel, weiche Handtrommeln, im Kampf schnelle Harfenlaeufe.
+  Orks: dunkel, tiefe Hoerner und Drones, Herzschlag, Tom-Trommeln, im Kampf wuchtige Rhythmen und Bass-Riffs.
+  Zwerge: Chor, Ambosshaerten, stampfende Trommeln, Blech.
+  Untote: Orgel, Glocken, Herzschlag, dissonante Skalen, im Kampf Tremolo, Orgel-Stakkato und Kriegstrommeln.
+- Die alten Kampfstuecke (Trommel, Sturm, Legion, Hunger) wurden ersetzt.
+
+Sonstiges
+- Upgrades unveraendert im Preis.
+
+=====================================================
+v0.8
+=====================================================
+WARTEZEIT (komplett neu, wie im Original)
+- Beim Kampfbeginn laeuft eine Uhr. Jede Einheit hat ihre FESTE Zeit, die sich nie aendert: die erste Einheit der Leiste ist am schnellsten, die letzte am langsamsten.
+- Eine Einheit ist bereit, sobald die Uhr ihre Zeit erreicht hat (die Karte in der Leiste wird hell und bekommt einen gruenen Rand). Der dunkle Balken zeigt, wie lange es noch dauert.
+- Rufst du IRGENDEINE Einheit, beginnt die Uhr fuer ALLE Einheiten wieder bei null. Die Zeiten selbst bleiben gleich.
+- Beispiel: Du rufst den Speertraeger (schnellste Einheit). Danach ist als Erstes wieder der Speertraeger bereit. Willst du ein Pferd, musst du laenger warten, bevor du irgendetwas rufst.
+- Die Uhr laeuft von Anfang an. Zu Beginn jeder Schlacht muss also jede Einheit erst ihre Zeit abwarten. Das gilt auch fuer die KI.
+- Die KI wartet am Anfang ab (Lage pruefen) und ruft erst dann. Ausserdem zoegert sie je nach Stufe (leicht lange, schwer kaum), hat einen Plan, welche Einheit sie als naechstes will, und wartet dafuer, bis sie bereit ist.
+- Zeiten (Grundwert, vor Fraktionsabgleich): Menschen Speertraeger 4 s, Schwertkaempfer 5 s, Bogenschuetze 8 s, Reiter 10 s. Staerkste Einheiten etwa 13 bis 15 s.
+- Die Reihenfolge der ersten drei Einheiten richtet sich nach der Einheitenleiste, der Rest nach der gemessenen Staerke (Duell-Simulation).
+- Optionen: Der alte Schalter fuer die Wartezeit-Art wurde entfernt. Es gibt nur noch diese Uhr.
+- Fraktionen neu abgestimmt (Spawn-Zeiten leicht unterschiedlich), Matchups schwanken jetzt zwischen etwa 35 und 65 Prozent.
+- KI-Spielstaerke wirkt jetzt deutlich: Eine mittlere KI schlaegt eine leichte etwa 80 Prozent der Zeit und verliert gegen eine brutale etwa 80 Prozent.
+
+KAMPAGNE
+- Start mit nur 3 Einheiten. Die vierte (bei den Menschen der Reiter) muss gekauft werden und ist teuer: Menschen Reiter 900, Elfen Hainwaechter 800, Orks Troll 900, Zwerge Eisenwaechter 900, Untote Knochenriese 850 Gold.
+- Karte deutlich groesser: 40 Gebiete (8 pro Volk) statt 25, groessere Landmasse, mehr Kuesten, Hauptstaedte und Gebiete.
+- Gegner haben je nach Gebiet unterschiedliche Einheiten-Mischungen (zufaellig, aber fest pro Gebiet). Die drei Grundeinheiten hat jeder, dazu kommen je nach Stufe bis zu 7 weitere. Die Mischung fliesst in die Schwierigkeit ein.
+- Neue Einheitenspezifische Verbesserungen (je 5 Stufen):
+  Bogenschiessen (Bogen und Armbrust: +8 Prozent Schaden, +5 Prozent Reichweite),
+  Magiestudien (Magier +10 Prozent Schaden),
+  Speerdrill (Speere und Hellebarden +8 Prozent Schaden, dazu +25 Prozent mehr Schaden gegen Reiter pro Stufe),
+  Klingenmeister (Schwerter und Dolche +10 Prozent),
+  Schlagkraft (Aexte, Haemmer, Keulen +10 Prozent),
+  Reiterei-Training (Reiter +8 Prozent Schaden, +5 Prozent Tempo),
+  Riesenstaerke (Riesen +10 Prozent Leben, +6 Prozent Schaden),
+  Schildwall (Einheiten mit Schild nehmen 8 Prozent weniger Pfeilschaden pro Stufe).
+- Dazu bleiben die allgemeinen Verbesserungen: Waffenschmiede, Schmiedekunst, Drill (kuerzere Zeiten), Verpflegung, Gewaltmarsch. Es werden nur die Verbesserungen gezeigt, die zu den Einheitenarten deines Volkes passen.
+- Ansicht Schmiede ist in "Allgemein" und "Einheitentypen" geteilt.
+- Alte Spielstaende (25 Gebiete) werden nicht mehr geladen, bitte neue Kampagne starten.
+
+=====================================================
+v0.7
+=====================================================
+Schwierigkeit (leicht / mittel / schwer)
+- Die Werte der Einheiten sind jetzt IMMER fest. Die Stufe aendert nicht mehr Leben, Tempo oder Wartezeit des Gegners.
+- Stattdessen spielt die KI anders: je schwerer, desto kuerzer die Reaktionszeit, desto bessere Bahnwahl (Verteidigung, Verstaerkung, schwache Bahnen), desto gezielter Konter-Einheiten (Speere gegen Reiter, Schnelle gegen Fernkaempfer, Fernkampf gegen Schwere, Durchbruch auf freien Bahnen) und desto kluger der Ansturm.
+- Die Zahl der Einheitentypen, die der Gegner nutzen darf, steigt mit der Stufe (4 bis 10, nach Kaufpreis geordnet).
+- Test per Simulation: Eine KI mit mittlerer Spielstaerke gewinnt gegen eine leichte KI ca. 77 Prozent, gegen eine brutale nur ca. 17 Prozent, bei gleichen Einheiten.
+- Schnelles Gefecht: Leicht 25, Normal 50, Schwer 75, Brutal 95 Prozent KI-Spielstaerke.
+- Faktionsstaerke (Leben-Bonus) entfernt, alle Einheiten sind fuer beide Seiten gleich.
+
+Wartezeit (neu: gestaffelt, Standard)
+- Nach jeder Einheit gibt es eine kurze Sperre fuer das ganze Heer UND jede Einheit hat zusaetzlich ihre eigene Wartezeit. Billige Einheiten sind schnell wieder da, starke brauchen deutlich laenger. Man kann also nicht mehr dauernd Reiter spammen.
+- Die Staerke jeder Einheit wurde per Duell-Simulation gemessen (jede Einheit gegen jede andere derselben Fraktion). Daraus ergibt sich die Wartezeit (ca. 2,6 bis 8,6 Sekunden Grundwert). Fernkaempfer bekommen einen kleinen Aufschlag.
+- Die Einheitenleiste im Kampf ist nach Wartezeit sortiert: links die schnellsten, rechts die langsamsten. Tasten 1 bis 8 folgen dieser Reihenfolge.
+- Anzeige: Jede Einheit zeigt ihre eigene Wartezeit, die kurze Sperre liegt ueber allen. Optionen: Gestaffelt (Standard), Nur gemeinsam, Nur pro Einheit.
+- Die Spawn-Raten der Fraktionen wurden neu abgestimmt.
+
+Ansturm
+- Braucht jetzt 25 besiegte Gegner (vorher 15), Riesen zaehlen doppelt.
+- Die KI waehlt die Ansturm-Einheit sinnvoll (kein Zufall mehr, ausser auf leicht).
+
+Kampagne
+- Prozentzahl ist jetzt wieder eine Schwierigkeit (wie im Original), keine Siegchance. Sie haengt ab von: Volk des Gegners, Entfernung zu deinem Land, Hauptstadt, Fortschritt und davon, wie gut deine Fraktion gegen sein Volk ist. Ergebnis: Werte von ca. 25 bis 65 Prozent in der ersten Runde, je nach Gebiet verschieden.
+- Beim Antippen eines Gebiets erscheint oben links eine Infobox wie im Original: Name, Schwierigkeit in Prozent, Besitzer. Unten steht die Prozentzahl neben dem Angreifen-Knopf.
+- Die Prozentzahl steht auch ueber allen angreifbaren Gebieten auf der Karte.
+- Start mit 500 Gold.
+- Verbesserungen haben unterschiedliche Preise (Waffenschmiede 450, Schmiedekunst 600, Drill 500, Verpflegung 400, Gewaltmarsch 550, steigend pro Stufe).
+
+Musik
+- Neue, deutlich andere Kampfmusik: schnell (126 bis 150 BPM), Kriegstrommeln, Saegezahn-Ostinato in schnellen Noten, Blech-Stakkato, Arpeggien, kein sanfter Teppich wie im Menue. Vier Stuecke wechseln sich ab (Trommel, Sturm, Legion, Hunger).
+
+=====================================================
+v0.6
+=====================================================
+Schwierigkeit und Tempo
+- Leichte Gegner sind wirklich leichter: Sie rufen langsamer Einheiten (je leichter, desto laengere Wartezeit), haben weniger Leben und entscheiden seltener.
+- Gegner nutzen je nach Stufe 4 bis 10 Einheitentypen (leicht: nur die 4 Starteinheiten, schwer: fast alles).
+- (ersetzt in v0.7) Jedes angreifbare Gebiet zeigte eine Siegchance in Prozent, auf der Karte und im Auswahlfeld. Sie wird per Probekaempfen (30 Simulationen) berechnet: deine Fraktion mit den 4 Starteinheiten und maessiger Spielstaerke gegen das Volk und die Stufe des Gegners. Gekaufte Einheiten und Verbesserungen zaehlen nicht mit. Werte in 5er-Schritten.
+- Gemeinsame Wartezeit ist laenger (Faktor 0,42 auf 0,6), schwere Einheiten kosten ueberproportional mehr Wartezeit.
+- Balance der Fraktionen neu per Simulation abgestimmt.
+
+Einheiten
+- Speertraeger (Menschen) laeuft jetzt schneller (56) als Schwertkaempfer (40) und Bogenschuetze (38).
+- Bogen und Armbrust haben rund 12 Prozent mehr Reichweite.
+- Bogenschuetzen gehen jetzt im Takt: schiessen, einen Schritt vorruecken, wieder schiessen. Sie ruecken nur vor, solange der Gegner nicht schon sehr nah ist.
+- Ruestung und Schild zaehlen gegen Fernkampf: Einheiten mit Schild nehmen 30 Prozent weniger Pfeilschaden. Einheiten ohne Ruestung (Wert bis 10) nehmen 15 Prozent mehr und koennen mit 8 Prozent Wahrscheinlichkeit einen Volltreffer (fast doppelter Schaden) kassieren.
+- Hellebardiere und andere Einheiten ohne Schild sind dadurch empfindlicher gegen Boegen.
+
+=====================================================
+v0.5
+=====================================================
+Karte
+- Karte laesst sich jetzt frei zoomen: Zwei-Finger-Pinch auf dem Handy, Mausrad am PC, Knoepfe + und -.
+- Karte wird mit einem Finger oder gedrueckter Maustaste verschoben. Tippen waehlt ein Gebiet.
+- Kartengrafik wird in doppelter Aufloesung gezeichnet, Symbole und Namen bleiben beim Zoomen schaerfer.
+- Eroberte Gebiete werden in deiner Farbe eingefaerbt, mit deutlicher Grenzlinie zu anderen Besitzern.
+
+Ueberfaelle (Kampagne)
+- Verlierst du eine Schlacht, greift immer ein Nachbar ein Gebiet von dir an. Nach einem Sieg passiert das mit 20 Prozent Wahrscheinlichkeit.
+- Du kannst das Gebiet selbst verteidigen (richtige Schlacht, Sieg bringt 60 Gold) oder es aufgeben.
+- Deine Hauptstadt wird nur angegriffen, wenn sonst kein Gebiet erreichbar ist.
+- Verlierst du dein ganzes Land, endet die Kampagne.
+
+Kampf
+- Ansturm: Du waehlst jetzt selbst die Einheit. Knopf "Ansturm" (oder Q) antippen, dann die gewuenschte Einheit antippen. Sie startet in allen 7 Bahnen.
+- Reittiere deutlich groesser, Reiter sitzen hoeher auf dem Tier.
+- Neuer Galopp: Hinterbeine setzen zuerst, Vorderbeine klappen beim Vorschwung ein, Koerper wippt, Kopf nickt, Schweif weht nach hinten. Reiter lehnen sich nach vorn.
+- Skelette sehen jetzt wie Skelette aus: Rippen, Wirbelsaeule, Schluesselbein, Becken, duenne Knochenarme und Knochenbeine, Schaedel mit Kiefer und Zaehnen.
+- Ghul bekommt grau-gruene Haut, eingefallenen Koerper und gelbe Augen.
+
+Musik
+- Kampfmusik ist von der Menuemusik getrennt.
+- Vier verschiedene Kampfstuecke wechseln sich ab: Marsch (d-Moll), Taiko (a-Moll), Heldenhaft (e-Moll) und Duester (c-Moll). Nach rund 50 Sekunden wechselt das Stueck zufaellig.
+
+Schnelles Gefecht
+- Neuer Modus "Computer gegen Computer": Du waehlst linke und rechte Fraktion sowie die Stufe und schaust zu (Tempo 1x, 2x, 4x).
+- Modus "Du gegen Computer" bleibt wie bisher.
+
+=====================================================
+v0.4
+=====================================================
+- Jede Einheit sieht jetzt eigen aus: eigene Kopfbedeckung (Federbusch, Visierhelm, Kapuze, Spitzhut, Geweih, Hoerner, Schaedel, Zwergenhelm, Grubenlampe), eigene Waffe und Ruestung.
+- Neue Waffen: Hellebarde, Glefe, Grossschwert, Zweihandhammer, Spitzhacke, Doppelaexte, Doppeldolche, Armbrust, Wurfspeer, Buechse mit Muendungsfeuer.
+- Koerperformen je Volk: Zwerge klein und breit, Elfen hoch und schlank, Orks breit und gebeugt, Untote duenn.
+- Schwere Einheiten tragen Plattenruestung, Schulterplatten, Wappenrock und Umhang.
+- Reittiere je Volk: Pferd, Streitross, Hirsch, Wolf, Eber, Widder, Skelettpferd.
+- Reiter haben Beine mit Stiefel im Steigbuegel, Tiere reichen bis zum Boden.
+- Elfenbaum entfernt. Neu: Hainwaechter (gepanzerter Elf mit Glefe) und Mondklinge (Elfenchampion mit Grossschwert).
+- Fraktionsansicht: Einheitenreihe oben ist seitlich scrollbar, alle 10 Einheiten mit Namen sichtbar.
+
+=====================================================
+v0.3
+=====================================================
+Kampagne
+- Menue "Fortsetzen / Neue Kampagne", automatisches Speichern im Browser.
+- Gemalte Fantasy-Karte mit 25 Gebieten, Kuesten, Waeldern, Bergen, Suempfen, Burgen, Schiffen, Kompass.
+- Tabs Karte, Heer, Schmiede. Heer: neue Einheiten kaufen, bis 8 im Kampf. Schmiede: 5 Verbesserungen mit je 5 Stufen.
+- Jede Fraktion hat 10 Einheiten (Start mit 4).
+- Fraktionen haben unterschiedliche Grundstaerke, Gegner werden weiter weg staerker.
+
+Bedienung
+- Handy: Pfeile am Rand waehlen die Bahn, Tipp auf Einheit ruft sie. Seite waehlbar.
+- PC: W/S oder Pfeile, Tasten 1 bis 8, Leertaste, Q, P, F.
+- Vollbild-Knopf, versucht Querformat.
+- Schutz vor versehentlichem Neuladen durch Runterwischen.
+
+Wartezeit
+- Standard: gemeinsame Wartezeit fuer das ganze Heer, schwere Einheiten laenger. Optional in den Optionen: pro Einheit.
+
+Sound
+- Synthetische Effekte (Schwert, Speer, Axt, Hammer, Bogen, Magie, Hufe, Todesschreie je Volk, Gong, Hoerner, Fanfare) und epische Menuemusik.
+- Lautstaerke fuer Musik und Effekte getrennt einstellbar.
+
+Sonstiges
+- Anzeige "Staerke der Fraktion" entfernt, es steht nur noch der Volksbonus.
+- Abgeschnittene grosse Einheiten im Dock behoben.
+- Balance per KI-gegen-KI-Simulation abgestimmt.
+
+=====================================================
+v0.2
+=====================================================
+- Figuren aus beweglichen Gliedern, Animationen fuer Gehen, Kaempfen und Sterben.
+- Hintergrund mit Huegeln, Wald, Burg, Staub, Funken, Pfeilflug.
+- Kampfdock mit Einheitenportraits.
+
+=====================================================
+v0.1
+=====================================================
+- Erste Version: 7 Bahnen, Kraefteverhaeltnis-Balken, Zeitlimit, 5 Fraktionen mit je 4 Einheiten, einfache Kampagne und schnelles Gefecht.
+
+=====================================================
+Bekannte Punkte / naechste Ideen
+=====================================================
+- Widder der Zwerge sehen noch etwas wollig-klumpig aus.
+- Sounds und Musik wurden synthetisch erzeugt und sind noch nicht auf echtem Geraet beurteilt worden.
+- Balance der 10er-Rosters nur grob per Simulation abgestimmt.

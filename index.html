@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="de"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="theme-color" content="#0d0f14">
+<title>Warlords: Schlachtlinien</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head><body><div id="app">
+
+<section class="screen on" id="sMenu">
+ <canvas id="menuCv"></canvas>
+ <h1>WARLORDS</h1><p class="sub">Schlachtlinien</p>
+ <div class="col">
+  <button class="btn" id="mCamp">Kampagne</button>
+  <button class="btn" id="mQuick">Schnelles Gefecht</button>
+  <button class="btn" id="mFact">Fraktionen ansehen</button>
+  <button class="btn" id="mOpt">Optionen</button>
+  <button class="btn" id="mMus">Musik</button>
+  <button class="btn" id="mHow">Anleitung</button>
+  <div id="mRowEnd"><button class="btn" id="mBal">Balance-Prüfung</button><button class="btn" id="mFs">Vollbild</button></div>
+ </div>
+</section>
+
+
+<section class="screen" id="sBal"><div id="balPanel">
+ <div class="row" style="justify-content:space-between"><button class="btn sm" id="balBack">Zurück</button><div class="sub" style="margin:0">Balance-Prüfung</div><span style="width:70px"></span></div>
+ <div id="balNote">Index: Kraft einer Einheit (Leben, Rüstung, Schaden, Angriffstempo) geteilt durch Wartezeit zum Quadrat, 1,00 ist der Durchschnitt des Volkes. Ein Wert deutlich über 1 bedeutet: zu stark für die Wartezeit. Duell: Beide Seiten rufen nur diese Einheit, so oft es geht. Der Wert ist der Anteil am Balken am Ende des Gefechts gegen Spam der schnellsten Einheit bzw. der nächstschnelleren Einheit gleicher Art (Nahkampf gegen Nahkampf), 50 % ist ausgeglichen. Unter 40 % lohnt sich das Warten nicht. Fernkämpfer (kursiv) haben nur einen Richtwert. Ohne Upgrades.</div>
+ <div class="brow"><button class="btn" id="balRun">Duell-Test starten</button><button class="btn sm" id="balCopy">Ergebnis kopieren</button>
+  <label>Durchläufe <select id="balN"><option value="4">4</option><option value="6" selected>6</option><option value="10">10</option><option value="16">16</option></select></label>
+  <label>Format <select id="balFmt"><option value="pc" selected>PC</option><option value="phone">Handy</option></select></label></div>
+ <div id="balProg"><b></b></div><div id="balMsg" class="sub" style="margin:2px 0;font-size:13px"></div>
+ <div id="balOut"></div>
+</div></section>
+<section class="screen" id="sCM"><div class="col">
+ <h2>Kampagne</h2>
+ <div class="panel" id="cmInfo" style="width:100%;text-align:center"></div>
+ <button class="btn" id="cmCont">Fortsetzen</button>
+ <button class="btn" id="cmNew">Neue Kampagne</button>
+ <button class="btn" id="cmBack">Zurück</button>
+</div></section>
+
+<section class="screen" id="sPick"><div class="pick">
+ <div class="row" style="justify-content:space-between"><button class="btn sm" id="pBack">Zurück</button><div id="pStep" class="sub" style="margin:0"></div><span style="width:70px"></span></div>
+ <div id="pStrip" style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;border-bottom:1px solid #ffffff14"><canvas id="pCv" style="height:200px;display:block"></canvas></div>
+ <div id="pModeRow" class="row" style="display:none;margin:8px 0"></div>
+ <div class="pickhead"><button class="btn arrow" id="pPrev">&#9664;</button><div class="nm" id="pName"></div><button class="btn arrow" id="pNext">&#9654;</button></div>
+ <p class="sub" id="pDesc"></p>
+ <div class="panel"><div class="bonus" id="pPas"></div><div style="overflow-x:auto;margin-top:8px"><table id="pTab"></table></div></div>
+ <div id="pDiff" class="row" style="margin-top:10px;display:none"></div>
+ <div class="row" style="margin:12px 0"><button class="btn" id="pGo">Wählen</button></div>
+</div></section>
+
+<section class="screen" id="sCamp">
+ <div id="cHead"><div class="hl"><button class="btn sm" id="cBack">Menü</button><button class="btn sm ico" id="cFs" title="Vollbild umschalten"><svg viewBox="0 0 24 24" width="20" height="20"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div><button class="btn" id="cCap"></button><div id="cInfo" style="display:none"></div><div id="cGoldP" title="Gold"><svg viewBox="0 0 40 34" width="34" height="29"><path d="M4 14h32v16a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z" fill="#7a4a22" stroke="#2a160a" stroke-width="1.5"/><path d="M4 14C4 5 10 2 20 2s16 3 16 12z" fill="#9a6230" stroke="#2a160a" stroke-width="1.5"/><path d="M4 14h32" stroke="#e6c15a" stroke-width="3"/><rect x="16" y="11" width="8" height="9" rx="1.5" fill="#f2d58a" stroke="#2a160a" stroke-width="1.2"/><circle cx="20" cy="15.5" r="1.6" fill="#2a160a"/><path d="M9 14v19M31 14v19" stroke="#e6c15a" stroke-width="2.2"/><circle cx="29" cy="3" r="4.2" fill="#ffd24a" stroke="#8a5a00" stroke-width="1.2"/><circle cx="35" cy="6.5" r="3.4" fill="#ffd24a" stroke="#8a5a00" stroke-width="1.2"/></svg><b id="cGold"></b></div></div>
+  <div id="cBody">
+  <div id="cMap" style="position:relative"><div id="mapInfo"></div><button id="atkTab" type="button"><svg viewBox="0 0 40 40" width="34" height="34"><g id="atkSw"></g></svg><span><b>Angreifen</b><i id="atkCry"></i></span></button><div id="capPanel"><div id="capHead"><b id="capTitle"></b><span id="capGold" style="color:#ffe9a8"></span><button class="btn sm" id="capX">&#10005;</button></div><div id="capBody"><div id="capTiles"></div><div id="capInfo"></div></div></div><div id="mapScroll"><canvas id="mapCv" width="1000" height="640"></canvas><div id="zoomB"><button class="btn" id="zIn">+</button><button class="btn" id="zOut">-</button></div></div><div id="cSel"></div></div>
+  <div id="cOther" style="display:none"></div>
+  <div id="modal"><div class="panel" style="max-width:420px;text-align:center"><h2 id="mdH"></h2><div id="mdT" style="margin-bottom:12px"></div><div class="row"><button class="btn" id="mdA"></button><button class="btn" id="mdB"></button></div></div></div>
+ </div>
+</section>
+
+<section class="screen" id="sOpt"><div class="pick">
+ <button class="btn sm" id="oBack">Zurück</button><h2>Optionen</h2>
+ <div class="panel">
+    <div class="opt"><span>Musik</span><input type="range" id="oMus" min="0" max="100"></div>
+  <div class="opt"><span>Kampfgeräusche</span><input type="range" id="oSfx" min="0" max="100"></div>
+  <div class="opt"><span>Touch-Pfeile (Handy)</span><div class="row" id="oTouch"></div></div>
+  <div class="opt"><span>Pfeile auf Seite</span><div class="row" id="oSide"></div></div>
+  <div class="opt"><span>Blut und Gore</span><div class="row" id="oGore"></div></div>
+  <div class="opt"><span>Sprache / Language</span><div class="row" id="oLang"></div></div>
+  <div class="opt"><span>Vollbild</span><button class="btn sm" id="oFs">Vollbild umschalten</button></div>
+ </div>
+ <p class="hint sub" style="margin-top:12px">Auf dem iPhone geht Vollbild nur, wenn du die Seite über Teilen, dann "Zum Home-Bildschirm" hinzufügst.</p>
+</div></section>
+
+<section class="screen" id="sMus"><div class="pick">
+ <button class="btn sm" id="muBack">Zurück</button><h2>Musik</h2>
+ <p class="sub">Hier legst du fest, welches Stück wo läuft. Deine Auswahl wird gespeichert.</p>
+ <div class="row" id="muCtx"></div>
+ <div class="row" id="muFac" style="margin:8px 0"></div>
+ <p class="sub" id="muHint" style="margin-top:8px"></p>
+ <div class="panel" id="muList"></div>
+ <div class="row" style="margin:12px 0"><button class="btn sm" id="muReset">Standard</button></div>
+</div></section>
+
+<section class="screen" id="sHow"><div class="pick">
+ <button class="btn sm" id="hBack">Zurück</button>
+ <h2>Anleitung</h2>
+ <div class="panel" style="line-height:1.5">
+ <p><b>Ziel:</b> Schicke Einheiten über sieben Bahnen zum gegnerischen Ende. Jede Einheit, die durchkommt, verschiebt den Balken oben zu deinen Gunsten. Ist er ganz auf deiner Seite, gewinnst du sofort. Läuft die Zeit ab, gewinnt, wer mehr Balken hat.</p>
+ <p><b>Handy:</b> Mit den Pfeilen am Rand wählst du die Bahn (der gelbe Pfeil links im Feld zeigt sie). Dann tippst du oben links auf eine Einheit, sie startet in dieser Bahn. Du kannst die Bahn auch direkt im Feld antippen.</p>
+ <p><b>PC:</b> W/S oder Pfeil hoch/runter wählen die Bahn, A/D oder Pfeil links/rechts wechseln die Einheit oben, Leertaste ruft die gewählte Einheit, Tasten 1 bis 8 rufen eine Einheit direkt, Q löst den Ansturm mit der gewählten Einheit aus, P pausiert, F Vollbild.</p>
+  <p><b>Spieler gegen Spieler</b> (Schnelles Gefecht): Spieler 1 sitzt links und spielt wie oben, nur ruft die Leertaste oder E (Ansturm: Q oder linke Umschalttaste). Spieler 2 sitzt rechts: Pfeil hoch/runter wählt die Bahn, Pfeil links/rechts die Einheit, Enter ruft sie, rechte Umschalttaste löst den Ansturm aus, am Ziffernblock rufen 1 bis 8 direkt. Am Handy gibt es zwei Bedienfelder, links für Spieler 1 und rechts für Spieler 2; die Bahn lässt sich auch durch Tippen auf die eigene Spielfeldhälfte wählen, und die Einheiten tippt man oben in der eigenen Leiste an.</p>
+  <p><b>Handy-Knöpfe:</b> Mit ▲ ▼ wählst du die Bahn, mit ◀ ▶ die Einheit. Der große Knopf ruft die gewählte Einheit, der kleine löst den Ansturm aus, sobald er leuchtet.</p>
+  <p><b>Tastatur:</b> In allen Menüs wählen W A S D oder die Pfeiltasten, die Leertaste bestätigt, Esc geht zurück. Auf der Kampagnenkarte springt W A S D zum Gebiet in dieser Richtung, die Leertaste greift an oder öffnet die Hauptstadt. Nach der Schlacht führt die Leertaste zurück.</p>
+ <p><b>Wartezeit:</b> Beim Kampfbeginn läuft eine Uhr. Jede Einheit hat ihre feste Zeit: die erste ist am schnellsten, die letzte in der Leiste am langsamsten. Sobald die Uhr die Zeit einer Einheit erreicht hat, ist sie bereit (das Feld wird hell). Rufst du irgendeine Einheit, beginnt die Uhr für ALLE wieder bei null. Willst du eine starke Einheit, musst du also länger warten, bevor du etwas rufst.</p>
+ <p><b>Ansturm:</b> Alle 15 besiegten Gegner ist er bereit (Riesen zählen doppelt). Dann blinkt der Pfeil links rot. Mit Q (am Handy: den Pfeil antippen) stürmt die gewählte Einheit in alle sieben Bahnen, sofern ihre Wartezeit abgelaufen ist. Danach läuft die Wartezeit wie beim normalen Rufen neu.</p>
+ <p><b>Taktik:</b> Speere stoppen Reiter, Fernkämpfer schießen über die Front, Schwere halten Bahnen, schnelle Einheiten schlüpfen durch Lücken. Höchstens drei Nahkämpfer greifen gleichzeitig eine Einheit an.</p>
+ <p><b>Kampagne:</b> Erobere Gebiete neben deinem Land. Je weiter im Landesinneren, desto schwerer der Gegner (das ist fest, die KI wird nicht stärker, wenn du stärker wirst). Schwere Gebiete geben mehr Beute. Von der Beute kaufst du neue Einheiten und Verbesserungen. Auch die Völker bekämpfen sich gegenseitig, du kannst zusehen oder überspringen. Der Stand wird automatisch gespeichert.</p>
+ </div></div></section>
+
+<section class="screen" id="sBattle">
+ <div id="hud">
+  <div id="barRow"><span id="lbL" class="lbx"></span><div id="bar"><i id="barL"></i><b id="barM"></b></div><span id="lbR" class="lbx"></span>
+   <div id="time">2:30</div>
+   <div id="hudBtns"><button class="btn sm" id="bSpd">1x</button><button class="btn sm" id="bPause">II</button><button class="btn sm" id="bFs">&#9974;</button><button class="btn sm" id="bQuit">Aufgeben</button></div></div>
+ </div>
+ <div id="cvWrap"><canvas id="cv"></canvas>
+  <div id="uTop"><div class="ugrp" id="uL"><div id="units"></div><div class="uname" id="uname"></div></div><div class="ugrp r" id="uR"><div id="eunits"></div><div class="uname" id="ename"></div></div></div>
+    <div id="tc" class="r"><button id="tUp">&#9650;</button><button id="tDn">&#9660;</button><button id="tGo">Rufen</button><button id="tCh">Ansturm</button><div id="tSel"><button id="tL">&#9664;</button><button id="tR">&#9654;</button></div></div>
+    <div id="tc2" class="r"><button id="tUp2">&#9650;</button><button id="tDn2">&#9660;</button><button id="tGo2">Rufen</button><button id="tCh2">Ansturm</button><div id="tSel2"><button id="tL2">&#9664;</button><button id="tR2">&#9654;</button></div></div>
+  <div id="res"><h1 id="resT"></h1><div id="resS" class="sub"></div><button class="btn" id="resB">Weiter</button></div></div>
+</section>
+
+</div>
+<!-- Eingebettete Sounds (Base64), werden vom Spiel als window.KH_SND / KH_FAN / KH_VK gelesen -->
+<script src="data/snd.js"></script>
+<script src="data/fan.js"></script>
+<script src="data/vk.js"></script>
+<!-- Spielcode, Reihenfolge wichtig -->
+<script src="js/01-daten-kern.js"></script>
+<script src="js/02-figuren.js"></script>
+<script src="js/03-karte-render.js"></script>
+<script src="js/04-sound.js"></script>
+<script src="js/06-dateimusik.js"></script>
+<script src="js/07-sprache.js"></script>
+<script src="js/08-menues.js"></script>
+<script src="js/09-kampagne.js"></script>
+<script src="js/10-schlacht.js"></script>
+<script src="js/11-todesanimation.js"></script>
+<script src="js/12-tastatur.js"></script>
+<script>if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){})})</script>
+</body></html>
