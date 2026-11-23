@@ -1,8 +1,177 @@
-KRIEGSHERR: SCHLACHTLINIEN, PATCHNOTES
-Datei: kriegsherr_v0.36.html (eine einzelne HTML-Datei, laeuft am PC und am Handy)
-Stand: 16.11.2026 (v0.36)
+WARLORDS: SCHLACHTLINIEN, PATCHNOTES
+Ordner: warlords (index.html mit Unterordnern css, js, audio, data, icons; laeuft am PC und am Handy, installierbar ueber GitHub Pages)
+Stand: 23.11.2026 (Aufteilung nach v0.40)
 
-v0.36 (aktuell)
+Nach v0.40 (aktuell): Umbenennung in Warlords und Aufteilung in Ordner
+=====================================================
+Umbenennung
+- Das Spiel heisst jetzt Warlords (vorher Kriegsherr). Geaendert: grosse Ueberschrift im Hauptmenue (WARLORDS), Titel im Browser-Tab (Deutsch "Warlords: Schlachtlinien", Englisch "Warlords: Battle Lines"), App-Name bei der Installation.
+- Unveraendert: die Ork-Einheit Kriegsherr (Englisch Warlord) behaelt ihren Namen. Ebenso unveraendert: interne Namen wie die Datei menu_kriegsherr.mp3 und die Speicherschluessel hf_opt und hf_camp2, damit gespeicherte Einstellungen und Spielstaende gueltig bleiben.
+
+Aufteilung in Ordner (statt einer einzelnen HTML-Datei von rund 37 MB)
+- index.html enthaelt nur noch das Seitengeruest (Menue, Auswahl, Schlacht) und laedt die uebrigen Dateien nacheinander. Die Reihenfolge der Skripte in index.html ist wichtig.
+- css/style.css: das gesamte Aussehen.
+- js/ in 11 Dateien, Spielcode unveraendert, nur verteilt: 01-daten-kern (Konstanten, Fraktionen, Einheiten, KI-Strategien), 02-figuren (Waffen, Koepfe, Reittiere, Figuren), 03-karte-render (Karte, Rendering), 04-sound (Synth-Sound, Effekte, Viking-Schlachtlied, Fanfaren-Faerbung, Musik-Engine), 06-dateimusik (Dateimusik), 07-sprache (Deutsch/Englisch), 08-menues (Optionen, Auswahl, Balance-Pruefung, Musik-Auswahl), 09-kampagne (Kampagne, Kopfleiste, Hauptstadt), 10-schlacht (Schlacht), 11-todesanimation (Todesanimationen mit Blut), 12-tastatur (Tastatursteuerung). Die Nummer 05 fehlt absichtlich (die Musik-Engine steckt in 04-sound).
+- Einzige Code-Aenderung: Musik und Sounds werden aus den Dateien in audio/ und data/ geladen statt aus Datenbloecken in der HTML-Datei. Spielregeln und Balance sind unveraendert.
+- audio/: die 25 Lieder als einzelne MP3-Dateien. Dateiname = ID in der Liste MTR (js/06-dateimusik.js). Neues Lied: MP3 nach audio/ legen und in MTR eintragen.
+- data/: Kampfgeraeusche (snd.js), Fanfaren (fan.js) und Wikinger-Schlachtlied (vk.js) als Base64-Daten. Sie werden vom Spiel als window.KH_SND, KH_FAN und KH_VK gelesen.
+- Die Gesamtgroesse sinkt von rund 37 MB auf rund 29 MB.
+
+Installation und Offline-Modus
+- Neu: manifest.webmanifest und icons/ (Schild mit Schwert, vorlaeufig) machen das Spiel als App installierbar (Chrome: "App installieren"; PC: Installieren-Symbol in der Adressleiste).
+- Neu: sw.js (Service Worker). Spielcode (html, js, css) wird online immer frisch geladen, offline gilt die zuletzt gespeicherte Version. Lieder, Sounddaten und Icons werden beim ersten Mal gespeichert. Wird eine Datei in audio/, data/ oder icons/ unter gleichem Namen ersetzt, in sw.js die Zeile VERSION hochzaehlen.
+- Online stellen ueber GitHub Pages: Repository (public) mit dem Inhalt des Ordners, Settings, Pages, Branch main, Ordner / (root).
+- Das Oeffnen per Doppelklick auf index.html funktioniert weiter (ohne Offline-Modus). Wichtig: Der ganze Ordner muss zusammenbleiben.
+
+Geprueft
+- Im Chromium, aufgeteilt gegenueber der alten Einzeldatei: Menue, Sprachwechsel Deutsch/Englisch, Menue-Musik als MP3, Kampfgeraeusche, Fanfaren, Viking-Schlachtlied und eine vollstaendige Schlacht laufen gleich, keine Konsolenfehler. Update ueber den Service Worker (neue index.html nach einmaligem Neuladen sichtbar) und Offline-Start getestet. Auf echten Geraeten und auf GitHub selbst noch nicht.
+
+=====================================================
+v0.40
+=====================================================
+Todesanimationen mit Blut
+- Jede Einheit stirbt jetzt je nach Waffe, die sie getroffen hat. Dazu merkt sich das Spiel den letzten Treffer (Waffe, Richtung, Ueberschuss). Mehrere Varianten pro Waffe, zufaellig gewaehlt.
+- Schwert, Dolch (Hieb): Kopf ab, Arm ab, in der Mitte durchtrennt oder tiefe Wunde.
+- Axt, Hellebarde (Spalten): Kopf ab, durchtrennt, Arm ab oder grosse Wunde. Wurfaxt: bleibt in der Brust stecken.
+- Hammer, Keule (Schlag): Schaedel zerschmettert, weggeschleudert, Kopf platzt ab oder Zusammenbruch. Wurfhammer: Delle und Wegschleudern.
+- Speer, Spiess: Stichwunde mit Blut, Austrittswunde hinten, manchmal bleibt ein abgebrochener Schaft stecken. Wurfspeer: bleibt stecken.
+- Bogen, Armbrust: ein bis drei Pfeile bzw. Bolzen bleiben im Koerper stecken, manchmal ein Treffer in den Kopf. Buechse: Einschussloch und Blut nach hinten.
+- Magie: Der Koerper verkohlt, schrumpft zu Asche und glimmt in der Farbe des Zaubers.
+- Klauen (Ghul): Kratzspuren, manchmal wird ein Arm abgerissen.
+- Skelette bluten nicht: Sie zerfallen in Knochen (Schaedel fliegt, Wirbelsaeule bricht, Knochensplitter und Staub). Orks haben dunkleres Blut, der Ghul gruenes. Reiter und Riesen: eigene Groesse, Kopf ab und Wunden moeglich.
+- Blut: spritzende Tropfen, Spritzer aus Halsstumpf und Schulter, Lachen unter den Gefallenen, Spuren am Boden, die langsam verblassen. Abgetrennte Teile prallen auf und bleiben liegen.
+- Gefallene bleiben etwa 9 Sekunden liegen (Riesen 12) und blenden dann aus. Liegende Koerper werden zwischengespeichert, damit das Spiel fluessig bleibt.
+- Neue Option Blut und Gore: Aus, Wenig, Normal, Viel. Standard ist Normal, am Handy Wenig. Bei Aus gilt wieder die alte, einfache Todesanimation. Maximalzahl gleichzeitiger Gefallener: 22, 44 oder 80.
+- Neuer Ton beim Tod: ein dumpfer Schlag.
+
+Technisches
+- Gemessen in einem PC-Browser: 30 liegende Gefallene gleichzeitig kosten keine Bildrate (60 fps), in der kurzen Bewegungsphase etwa 57 fps.
+
+Nicht enthalten
+- Noch keine eigenen Todesanimationen fuer Reittiere (das Tier faellt mit dem Reiter zusammen).
+
+=====================================================
+v0.39
+=====================================================
+KI mit Strategien
+- Jede KI waehlt zu Beginn eine Strategie (gewichtet, mit Zufall): Masse (viele schnelle Einheiten), Elite (am Anfang schnelle Einheiten, dann wartet sie auf starke), Fernkampf (Fernkaempfer hinter Gepanzerten), Reiter (Tempo), Konter, Ausgewogen.
+- Die KI liest die Armee des Gegners und reagiert darauf: Viele Fernkaempfer beim Gegner (ueber 45 Prozent): mehr Reiter, schnelle und gepanzerte Einheiten. Viele Schwere: mehr Fernkaempfer und harte Treffer. Viele Reiter: mehr Speere. Der Effekt waechst mit der Schwierigkeit.
+- Die KI wechselt die Strategie, wenn sie unter 45 Prozent des Balkens liegt oder zufaellig alle 9 bis 18 Sekunden mit kleiner Chance.
+- Ansturm der KI in zwei Stilen: Kraft-Ansturm (wartet auf die staerkste Einheit, nimmt bei Bedraengnis die staerkste bereite) und Tempo-Ansturm (schnellste Reiter oder Laeufer). Sie nutzt nicht mehr bevorzugt die schnellsten Einheiten, die gerade bereit sind.
+- Die Vorliebe fuer schnelle Einheiten aus v0.24 wurde zu einem kleinen Teil beibehalten (die Voelker waren darauf abgestimmt).
+- Kampagne: Die KI merkt sich pro Volk ihre letzte Strategie (Speicher im Spielstand). Hat sie gewonnen, bleibt sie eher dabei. Hat sie verloren, wechselt sie und waehlt eher Konter und Elite.
+
+Hauptstaedte und Regionen
+- Hauptstaedte sind deutlich staerker: +28 Prozent Leben und Schaden und 8 Prozent kuerzere Wartezeit. Weiter entfernte Regionen bekommen 4 Prozent je Ring, hoechstens 15 Prozent. Die Schwierigkeitsanzeige und die Belohnung beruecksichtigen das.
+- Test mit einem Bot, der nur die drei Starter-Einheiten ruft: Gegen eine Hauptstadt (Schwierigkeit 0,9, zehn Einheiten) siegte er vorher in 35 bis 85 Prozent, jetzt in 0 bis 8 Prozent.
+
+Voelker neu abgeglichen
+- Alle Einheiten eines Volkes um einen Faktor angepasst (gegen die neue KI gemessen): Elfen 1,12, Orks 1,05, Zwerge 0,96, Untote 0,93, Menschen 1,00. Mittlerer Siegesanteil pro Volk (KI gegen KI, alle Einheiten): 37 bis 56 Prozent.
+- Elfen-Passiv: Der Text sagte 12 Prozent mehr Fernschaden, im Spiel gilt seit v0.24 6 Prozent. Der Text wurde angepasst.
+
+Bekannte Schwaeche
+- Ein Bot, der nur Armbrust und Bogen der Menschen in Masse ruft, gewinnt weiter oft gegen die Untoten-Hauptstadt (gemessen etwa 80 bis 95 Prozent). Massierte Fernkaempfer mit vierfacher Reichweite sind stark, und die Untoten haben wenig Antwort darauf. Das ist eher eine Frage der Fernkampf-Balance als der KI-Strategie.
+
+Fehler behoben
+- Beim ersten Einbau wuerde die Kampagne am Kampfende einen Fehler ausloesen. Das wurde vor der Auslieferung behoben und getestet.
+
+=====================================================
+v0.38
+=====================================================
+Einheiten abgeglichen (erster Durchgang)
+Ziel: Warten soll sich lohnen, Fernkaempfer sollen brauchbar sein, die Voelker sollen ausgeglichen sein. Gemessen mit der Balance-Pruefung und mit KI-gegen-KI-Gefechten.
+
+1) Kraft passend zur Wartezeit (Nahkaempfer)
+- Jede Einheit tritt gegen Spam der naechstschnelleren an, die Werte wurden automatisch nachgestellt (nur zum Teil, hoechstens plus/minus 35 Prozent, damit nichts ausser Kontrolle gerät). Das Gesamtniveau jedes Volkes bleibt dabei erhalten.
+- Die schnellen Starter sind schwaecher (Schwertkaempfer Leben 90 -> 73 und Schaden 11 -> 8,9, Hammertraeger Leben 81 -> 59), die spaeten Einheiten staerker (Gardist, Ritter, Gruftreiter, Wiedergaenger, Knochenriese, Schaedelbrecher, Thane, Widderreiter, Eisenbrecher).
+- Der Wolfsreiter wurde bewusst nicht angepasst (starke Startbedingung der Orks).
+- Balance-Pruefung: Bei den Nahkaempfern ohne Starter lohnt sich das Warten bei 13 statt 12 von 30 Einheiten, rot sind 10 statt 12. Viele Rotwerte sind Konter (Speer gegen Reiter) und keine Werte-Frage.
+
+2) Fernkaempfer
+- Schaden: Menschen Bogenschuetze +15 Prozent, Armbrustschuetze +7 Prozent; Zwerge Armbrust +15, Buechse +7, Axtwerfer +15, Hammerwerfer +10 Prozent; Untote Knochenbogen +15, Pestschleuder +12 Prozent. Orks und Elfen unveraendert (Elfen-Bogenschuetzen sind schon gut).
+- Armbrustschuetze der Menschen: Wartezeit 4,35 -> 3,6 s.
+- Test (reine Fernkaempfer-Heere gegen reine Nahkaempfer-Heere, PC-Format): Siegesanteil Menschen 0 -> 63, Zwerge 17 -> 67, Untote 21 -> 83 Prozent.
+
+3) Voelker untereinander (alle Einheiten, KI gegen KI)
+- Die Zwerge waren zu stark, die Orks zu schwach. Alle Einheiten eines Volkes wurden um denselben Faktor angepasst: Zwerge 0,88, Elfen 1,04, Orks 1,05, Untote 1,10, Menschen 1,00.
+- Mittlerer Siegesanteil pro Volk: vorher Zwerge 98, Menschen 68, Untote 34, Orks 29, Elfen 21. Jetzt 42 bis 62 Prozent (Menschen 44, Elfen 46, Orks 42, Zwerge 57, Untote 62).
+- Die Schwierigkeitsanzeige der Kampagne wurde zu etwa einem Drittel an die neuen Messwerte angepasst.
+
+Alle Aenderungen im Einzelnen (Leben, Schaden, Wartezeit)
+Menschenbund
+  Speertraeger: Leben 60 -> 58, Schaden 8.1 -> 7.9
+  Schwertkaempfer: Leben 90 -> 73, Schaden 11.0 -> 8.9
+  Bogenschuetze: Schaden 8.8 -> 10.1
+  Reiter: Leben 117 -> 122, Schaden 14.7 -> 15.3
+  Hellebardier: Leben 70 -> 77, Schaden 14.7 -> 16.3
+  Armbrustschuetze: Schaden 19.5 -> 20.9, Wartezeit 4.35 -> 3.6
+  Gardist: Leben 150 -> 173, Schaden 14.0 -> 16.1
+  Ritter: Leben 160 -> 184, Schaden 16.0 -> 18.4
+  Paladin: Leben 260 -> 264, Schaden 24.0 -> 24.4
+Waldelfen
+  Spaeher: Leben 28 -> 29, Schaden 4.0 -> 4.2
+  Waldlaeufer: Leben 38 -> 40, Schaden 11.0 -> 11.4
+  Speerelf: Leben 69 -> 72, Schaden 9.9 -> 10.3
+  Hainwaechter: Leben 232 -> 211, Schaden 14.4 -> 13.1
+  Dolchtaenzer: Leben 48 -> 61, Schaden 8.2 -> 10.4
+  Dornenwaechter: Leben 95 -> 103, Schaden 10.3 -> 11.1
+  Falkenschuetze: Leben 34 -> 35, Schaden 9.2 -> 9.6
+  Druide: Leben 42 -> 44, Schaden 14.4 -> 15.0
+  Hirschreiter: Leben 106 -> 115, Schaden 12.3 -> 13.4
+  Mondklinge: Leben 401 -> 350, Schaden 20.6 -> 18.0
+Orks des Nordens
+  Grunzer: Leben 42 -> 47, Schaden 7.8 -> 8.8
+  Axtschwinger: Schaden 12.5 -> 12.6
+  Wolfsreiter: Leben 82 -> 87, Schaden 12.7 -> 13.3
+  Troll: Leben 269 -> 256, Schaden 23.5 -> 22.4
+  Pluenderer: Leben 38 -> 40, Schaden 6.9 -> 7.2
+  Speerwerfer: Leben 43 -> 45, Schaden 10.4 -> 10.9
+  Schwarzork: Leben 134 -> 135, Schaden 19.6 -> 19.8
+  Schamane: Leben 38 -> 40, Schaden 15.8 -> 16.6
+  Eberreiter: Leben 150 -> 151, Schaden 17.9 -> 18.2
+  Kriegsherr: Leben 345 -> 301, Schaden 29.4 -> 25.6
+  Axtwerfer: Leben 52 -> 55, Schaden 13.2 -> 13.9
+Zwergenclans
+  Hammertraeger: Leben 81 -> 59, Schaden 9.1 -> 6.6
+  Armbrustschuetze: Leben 31 -> 27, Schaden 12.4 -> 12.6
+  Axtkaempfer: Leben 68 -> 69, Schaden 11.5 -> 11.7
+  Minenarbeiter: Leben 55 -> 65, Schaden 8.6 -> 10.2
+  Thane: Leben 136 -> 162, Schaden 17.2 -> 20.4
+  Buechsenschuetze: Leben 36 -> 32, Schaden 20.6 -> 19.4
+  Runenschmied: Leben 55 -> 48, Schaden 15.3 -> 13.5
+  Widderreiter: Leben 173 -> 206, Schaden 14.3 -> 17.0
+  Eisenbrecher: Leben 273 -> 307, Schaden 24.8 -> 27.9
+  Axtwerfer: Leben 46 -> 40, Schaden 13.0 -> 13.1
+  Hammerwerfer: Leben 52 -> 46, Schaden 17.0 -> 16.5
+Untote Legion
+  Skelette: Leben 34 -> 35, Schaden 7.0 -> 7.2
+  Knochenbogen: Leben 27 -> 30, Schaden 7.0 -> 8.8
+  Ghul: Leben 110 -> 113, Schaden 13.3 -> 13.6
+  Knochenriese: Leben 241 -> 307, Schaden 21.4 -> 27.3
+  Wiedergaenger: Leben 150 -> 197, Schaden 12.9 -> 16.9
+  Pestschleuder: Leben 34 -> 37, Schaden 10.7 -> 13.2
+  Schaedelbrecher: Leben 103 -> 128, Schaden 19.3 -> 24.0
+  Nekromant: Leben 40 -> 44, Schaden 15.0 -> 16.5
+  Gruftreiter: Leben 115 -> 154, Schaden 12.9 -> 17.3
+  Todesritter: Leben 368 -> 397, Schaden 30.0 -> 32.5
+
+Nicht geaendert: Magier und alle Faehigkeiten, Durchbruch nach Staerke, KI (kommt als naechstes). Die Balance-Pruefung im Menue zeigt jederzeit den Stand.
+
+=====================================================
+v0.37
+=====================================================
+Balance-Pruefung (neu im Hauptmenue, neben Vollbild)
+- Ein neuer Bildschirm prueft die Einheiten. Er braucht keine Eingabe ausser einem Knopf und dauert am PC etwa 8 Sekunden.
+- Tabelle: Wartezeit, Kraft (Leben, Ruestung, Schaden und Angriffstempo) und der Index. Der Index ist die Kraft geteilt durch Wartezeit zum Quadrat, 1,00 ist der Durchschnitt des Volkes. Werte deutlich ueber 1 bedeuten: zu stark fuer die Wartezeit. Werte unter 0,5 zeigen eine schwache Einheit.
+- Duell-Test: Beide Seiten rufen nur eine Einheit, so oft es geht. Die Einheit tritt gegen Spam der schnellsten Einheit und gegen Spam der naechstschnelleren Einheit gleicher Art an (Nahkampf gegen Nahkampf, Fernkampf gegen Fernkampf). Der Wert ist der Anteil am Balken am Ende des Gefechts, mit abwechselnden Seiten, 50 Prozent sind ausgeglichen. Unter 40 Prozent lohnt sich das Warten nicht (rot), ab 55 Prozent schon (gruen).
+- Einstellbar sind die Zahl der Durchlaeufe (4 bis 16) und das Format (PC oder Handy). Der Knopf Ergebnis kopieren legt die Tabelle als Text in die Zwischenablage.
+- Fernkaempfer sind nur ein Richtwert, weil ihre Reichweite zusaetzlich zaehlt. Upgrades werden nicht mitgerechnet.
+- Damit kann man neue oder geaenderte Einheiten sofort pruefen.
+
+Hinweis: Spieler gegen Spieler war in v0.36 schon vorhanden und ist unveraendert.
+
+=====================================================
+v0.36
 =====================================================
 Magier-Auren = Schussreichweite
 - Heilende Magie und Waldsegen wirken jetzt genau innerhalb der Schussreichweite des Magiers, immer, auch nach dem Upgrade Seherglas (Reichweite waechst, die Aura waechst mit). Vorher fester Wert (16 % der Feldbreite).
