@@ -21,6 +21,6 @@ Dateiname = `id` + `.mp3`, und in `sw.js` nichts weiter nötig.
 
 1. Neues Repository auf github.com anlegen, alle Dateien hochladen.
 2. Settings → Pages → Branch `main`, Ordner `/ (root)` → Save.
-3. Nach 1 bis 2 Minuten läuft es unter `https://DEINNAME.github.io/REPONAME/`.
+3. Nach 1 bis 2 Minuten läuft es unter `https://DerRolo.github.io/Warlords/`.
 4. Am Handy (Chrome): Seite öffnen → Menü → „App installieren“ / „Zum Startbildschirm“.
    Am PC: Installieren-Symbol in der Adressleiste.
