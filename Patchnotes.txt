@@ -1,8 +1,34 @@
 WARLORDS: SCHLACHTLINIEN, PATCHNOTES
 Ordner: warlords (index.html mit Unterordnern css, js, audio, data, icons; laeuft am PC und am Handy, installierbar ueber GitHub Pages)
-Stand: 23.11.2026 (Aufteilung nach v0.40)
+Stand: 23.11.2026 (v0.41)
 
-Nach v0.40 (aktuell): Umbenennung in Warlords und Aufteilung in Ordner
+v0.41 (aktuell): Todesanimationen neu, Figuren zerfallen in Einzelteile (Ragdoll)
+=====================================================
+Rueckmeldungen zur Todesanimation umgesetzt
+- Doppelter Kopf behoben. Ursache: Der ausgeschnittene Kopf-Bereich kippte beim Umfallen nicht mit der Figur mit, dadurch blieb ein zweiter Kopf am Koerper stehen. Jetzt wird die Figur beim Tod Teil fuer Teil gezeichnet (Kopf, Arm, Beine, Koerper, Waffe, Reittier), jedes Teil ist ein eigenes Bild und es kann nichts mehr doppelt vorkommen.
+- Waffen bleiben nicht mehr in der Hand: in rund 88 Prozent der Faelle faellt die Waffe ab, fliegt mit Drehung an unterschiedliche Stellen und bleibt flach auf dem Boden liegen (auch Boegen und Armbrueste). In manchen Faellen haelt die abgetrennte Hand die Waffe noch fest.
+- Neue Tode: Arm ab (der Arm fliegt weg), Bein ab (ab dem Knie, der Rest kippt um), Koerper in der Mitte getrennt (Oberkoerper fliegt, die Beine kippen getrennt), Kopf ab, Kopf platzt (Keulen, Hammer), Kopf fliegt hoch, Ragdoll-Schleudern (der Koerper fliegt mit Drehung, prallt auf, rutscht und rollt aus).
+- Entfernt: der Schnitt-Strich quer ueber Kopf und Koerper. Verwundungen sind jetzt Blutflecken auf der Kleidung.
+- Orks sind brutaler: gegen andere Voelker (ebenso Trolle und Riesen als Angreifer) gibt es haeufiger abgetrennte Glieder und Schleudern, mit rund 1,5-fachem Rueckstoss und Wurfweite.
+- Reiter fallen vom Tier und purzeln wie eine Ragdoll. Das Tier laeuft in etwa der Haelfte der Faelle ohne Reiter weiter (rund 3 Sekunden, blendet dann aus), sonst ueberschlaegt es sich und bleibt mit den Beinen nach oben liegen.
+- Skelette zerfallen in Schaedel, Arm (mit oder ohne Schwert), Brustkorb, Beine und einzelne Knochen.
+- Grosse Einheiten (Trolle, Riesen) fallen langsamer und mit weniger Weite um, ohne Beinabtrennung oder Teilung. Magier loesen sich weiter in Asche auf.
+
+Blut und Tote als Bild (spart Speicher und Rechenzeit)
+- Sobald alle Teile eines Toten ruhen (nach rund 1,5 Sekunden), werden sie samt liegendem Reittier in die Bodenschicht gebrannt. Danach ist der Tote nur noch ein Bild und kostet keinen Speicher mehr. Vorher belegte jeder Tote ein eigenes grosses Bild.
+- Lebende Einheiten laufen ueber die liegenden Toten. Tote und Blut verblassen gemeinsam etwas schneller als vorher (3 Prozent alle 2,5 Sekunden statt 2 Prozent alle 2 Sekunden).
+- Aenderung bei der Aufloesung: Auf Bildschirmen mit sehr hoher Pixeldichte sind die eingebrannten Toten etwas weicher als lebende Figuren.
+
+Technik
+- js/02-figuren.js: figure() hat den neuen Schalter F.parts (Teile: body, head, arm, wp, legs, legA, legB, mount). Ohne F.parts ist die Zeichnung unveraendert (alle 53 Figuren Punkt fuer Punkt mit v0.40 verglichen).
+- js/11-todesanimation.js: neu geschrieben (Teile, Physik, Todesarten, Einbrennen in die Bodenschicht). Blut, Knochen und Asche bleiben wie bisher.
+- js/01-daten-kern.js: der letzte Treffer merkt sich zusaetzlich das Volk (af) und die Art (ak) des Angreifers, damit die Orks brutaler zuschlagen koennen.
+
+Geprueft
+- Chromium: alle Todesarten einzeln (Kopf ab, Arm ab, Bein ab, Teilung, Schleudern, Skelette, Reiter, Fernkampf, Troll) und mehrere komplette Schlachten im Schnelldurchlauf ohne Konsolenfehler. Auf echten Geraeten (Handy) noch nicht.
+
+=====================================================
+Nach v0.40: Umbenennung in Warlords und Aufteilung in Ordner
 =====================================================
 Umbenennung
 - Das Spiel heisst jetzt Warlords (vorher Kriegsherr). Geaendert: grosse Ueberschrift im Hauptmenue (WARLORDS), Titel im Browser-Tab (Deutsch "Warlords: Schlachtlinien", Englisch "Warlords: Battle Lines"), App-Name bei der Installation.

@@ -169,7 +169,7 @@ function step(b,dt){
    if(!ranged)tgt.att++;
    if(u.cd<=0){
     let hit=true;if(d.k==='bow'){const dist=Math.abs(tgt.x-u.x);hit=Math.random()<Math.max(.35,Math.min(.97,(d.acc||.8)+(m.hk||0)-.12*dist/R))}
-    if(hit){tgt.hp-=dmgOf(b,u,tgt);tgt.hit=.15;tgt.lk={w:goreWeapon(b.f[u.side],d),th:!!d._gth,dx:u.side==='L'?1:-1,ov:-tgt.hp/tgt.mhp,ox:d.k==='mage'?FACTIONS[b.f[u.side]].orb:null}}
+    if(hit){tgt.hp-=dmgOf(b,u,tgt);tgt.hit=.15;tgt.lk={w:goreWeapon(b.f[u.side],d),th:!!d._gth,dx:u.side==='L'?1:-1,ov:-tgt.hp/tgt.mhp,ox:d.k==='mage'?FACTIONS[b.f[u.side]].orb:null,af:b.f[u.side],ak:d.k}}
     u.cd=d.cd*((m.cdm&&m.cdm[u.cls])||1);u.am=ranged?.5:.32;u.anim=u.am;u.first=false;
     const tx=hit?tgt.x:tgt.x+(Math.random()<.5?-1:1)*(25+Math.random()*55);
     if(ranged){if(b.fx.length<200)b.fx.push({k:'a',x1:u.x,x2:tx,lane:u.lane,yo:u.yo,t:.48,max:.48,dly:.3,side:u.side,orb:d.k==='mage'?1:0,thr:d.n==='Axtwerfer'?'axe':d.n==='Hammerwerfer'?'hammer':d.n==='Speerwerfer'?'spear':'',fk:b.f[u.side]});

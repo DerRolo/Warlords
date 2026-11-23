@@ -1,7 +1,9 @@
 /* Todesanimationen mit Blut */
-/* ---------- v0.40: Todesanimationen mit Blut ----------
-   Beim Tod wird die Figur je nach Waffe zerteilt, weggeschleudert oder mit steckenden Pfeilen und Speeren hingelegt.
-   Teile werden mit der normalen Figurenzeichnung und Clip-Flaechen erzeugt, Blut ist ein Tropfensystem plus Bodenschicht. */
+/* ---------- v0.41: Todesanimationen als Ragdoll aus Einzelteilen ----------
+   Beim Tod wird die Figur mit der normalen Figurenzeichnung Teil fuer Teil zerlegt (figure(), Schalter F.parts):
+   Kopf, Arm, Bein, Koerper, Beine, Waffe und Reittier. Jedes Teil ist ein kleines Bild mit eigener Physik
+   (Fliegen, Aufprall, Rollen, Liegenbleiben). Ruhende Teile werden in die Bodenschicht gebrannt, dann kostet ein Toter keinen Speicher mehr.
+   Reiter fallen vom Tier, das Tier laeuft weiter oder bricht zusammen. Orks gehen gegen andere Voelker brutaler vor. */
 const GORE={objs:[],drops:[],bits:[],layer:null,lc:null,ls:1,fadeT:0};
 const GORE_PEST={w:'pest',dx:0,ov:0};
 function goreReset(){GORE.objs=[];GORE.drops=[];GORE.bits=[];GORE.layer=null;GORE.lc=null}
@@ -12,57 +14,124 @@ function goreWeapon(fk,d){if(d._gw)return d._gw;const w=(LOOK[fk+':'+d.n]||{}).w
  else if(k==='mage'||w==='mage')r='magic';else if(w==='claw'||k==='claw')r='claw';else if(k==='big')r='blunt';else if(k==='cav')r='pierce';else r='slash';
  d._gw=r;d._gth=w.indexOf('jav')>=0;return r}
 function goreBloodCol(g){return g.skel?'#e6e0c4':g.gh?'#42602a':g.fk==='orcs'?'#6a1c12':'#a31616'}
+/* Waffen: halbe Laenge (fuer den Bodenkontakt) und Achsenwinkel in der Ruhepose */
+const WHL={spear:.55,halberd:.6,glaive:.6,jav:.4,sword:.22,greatsword:.4,dagger:.12,dagger2:.12,club:.25,axe:.3,axe2:.3,axejav:.25,hammerjav:.25,hammer:.3,maul:.35,spikemaul:.35,pick:.25,mage:.5,bow:.3,xbow:.3,gun:.4,scout:.15};
+const WA0={spear:2.9,halberd:2.9,glaive:2.9,mage:3.0,sword:2.4,greatsword:2.4,jav:2.6,axejav:2.6,hammerjav:2.6};
+function goreAxis(wk){if(wk==='bow')return Math.PI/2;if(wk==='xbow'||wk==='gun')return 0;const wa=WA0[wk]||2.2;return Math.atan2(Math.cos(wa),Math.sin(wa))}
+function goreBox(k,up){const B={head:[-.6,-1.55,.65,-.64],arm:[-.25,-.98,.6,-.2],wp:[-.9,-2.35,1.9,0],legs:[-.62,-.6,.72,.14],leg:[-.45,-.6,.55,.14],body:[-.7,-1.62,.75,.14],upper:[-.7,-1.62,.75,-.34]}[k];return[B[0],B[1]-up,B[2],B[3]-up]}
 function goreSpawn(b,u){const lv=goreLevel();if(!lv)return false;
  const fk=b.f[u.side],d=u.d,L=LOOK[fk+':'+d.n]||{},lk=u.lk||{w:'slash',dx:u.side==='L'?-1:1,ov:0};
- const big=d.k==='big'||d.k==='ent',cav=!!L.m||d.k==='cav',gh=!!L.gh,skel=fk==='undead'&&!L.hv&&d.k!=='mage'&&!gh;
- const g={fk,d,x:u.x,lane:u.lane,yo:u.yo,dir:u.side==='L'?1:-1,ph:u.ph||0,wt:u.wt||0,age:0,w:lk.w,th:!!lk.th,big,cav,skel,gh,pcs:[],bursts:[],life:big?12:9,
-  cloth:(b.f.L===b.f.R&&u.side==='R')?'#b8332e':null,back:lk.dx||0,ov:Math.min(2,lk.ov||0),orb:lk.ox,lv,first:true,spurt:null,pool:false};
+ const big=d.k==='big'||d.k==='ent',mt=L.m||(d.k==='cav'?'horse':null),gh=!!L.gh,skel=fk==='undead'&&!L.hv&&d.k!=='mage'&&!gh;
+ const wk=L.w||(d.k==='mage'?'mage':d.k==='bow'?'bow':d.k==='cav'?'spear':'sword');
+ const g={fk,d,x:u.x,lane:u.lane,yo:u.yo,dir:u.side==='L'?1:-1,ph:u.ph||0,wt:u.wt||0,age:0,w:lk.w,th:!!lk.th,big,cav:!!mt,mt,skel,gh,wk,pcs:[],bursts:[],life:big?14:11,
+  cloth:(b.f.L===b.f.R&&u.side==='R')?'#b8332e':null,back:lk.dx||0,ov:Math.min(2,lk.ov||0),orb:lk.ox,lv,first:true,spurt:null,pool:false,built:false,
+  brut:((lk.af==='orcs'&&fk!=='orcs')||lk.ak==='big'||lk.ak==='ent')?1:0,main:null,mount:null,force:lk.force||null};
  g.col=lk.w==='pest'?'#6c8a2a':goreBloodCol(g);
- const seat=cav?(MT[L.m||'horse']||MT.horse).seat*1.2:.44;g.hy=-(seat+.44);g.sh=g.hy+.14;g.waist=cav?-(seat+.18):-.60;
- goreVariant(g);
- GORE.objs.push(g);const cap=lv===1?22:lv===2?44:80;while(GORE.objs.length>cap)GORE.objs.shift();
+ GORE.objs.push(g);const cap=lv===1?26:lv===2?50:90;while(GORE.objs.length>cap)GORE.objs.shift();
  return true}
-function goreVariant(g){const R=(a,b,c,d)=>[[a,b],[c,b],[c,d],[a,d]],rnd=Math.random,bk=(g.back*g.dir)||-1,sg=()=>rnd()<.5?-1:1;
- const HEAD=R(-.36,g.hy-.38,.40,g.hy+.12),ARM=R(.17,g.sh-.2,.80,g.sh+.38),neckY=g.hy+.10;
- const body=(o)=>{const p=Object.assign({pv:[0,0],ox:0,oy:0,vx:bk*.35,vy:0,a:0,w:0,fall:0,fd:.55,delay:0,clip:null,excl:[],over:[],role:'body',fly:false},o||{});g.pcs.push(p);return p};
- const part=(clip,pv,v,w,over)=>{const p={pv,ox:0,oy:0,vx:v[0],vy:v[1],a:0,w,fall:0,clip,excl:null,over:over||[],role:'part',bn:0,rest:false};g.pcs.push(p);return p};
- const burst=(fx,fy,n,sp,ang,spr)=>g.bursts.push({fx,fy,n,sp,ang,spr});
- const cap=(x,y,w)=>({t:'cap',x,y,w}),W0=g.w;
- const decap=()=>{const b=body({excl:[HEAD],over:[cap(.02,neckY,.075)]});part([HEAD],[0,g.hy+.02],[bk*(.7+rnd()*.9),-(1.9+rnd()*1.3)],sg()*(4+rnd()*6),[cap(.02,neckY,.075)]);burst(.02,neckY,26,2.3,-1.45,.7);g.spurt={fx:.02,fy:neckY,until:.95,rate:38}};
- const arm=()=>{body({excl:[ARM],over:[cap(.17,g.sh+.1,.06)]});part([ARM],[.17,g.sh+.1],[bk*.8,-1.2],sg()*(5+rnd()*4),[cap(.17,g.sh+.1,.06)]);burst(.17,g.sh+.1,20,2,-1.2,.9);g.spurt={fx:.17,fy:g.sh+.1,until:.7,rate:26}};
- const bisect=()=>{const ang=(rnd()-.5)*.7,s=Math.tan(ang),y=g.waist,UP=[[-1.1,-2.8],[1.1,-2.8],[1.1,y+s*1.1],[-1.1,y-s*1.1]],LOW=[[-1.1,y-s*1.1],[1.1,y+s*1.1],[1.1,.6],[-1.1,.6]],band={t:'band',x:0,y,w:.17,a:ang};
-  body({clip:[LOW],over:[band],delay:.22,fd:.5});part([UP],[0,y],[bk*.9,-.55],-1*Math.abs(bk)*(2.5+rnd()*2)*(bk<0?1:-1),[band]);burst(0,y,36,2,-1.1,1.2);g.spurt={fx:0,fy:y,until:.8,rate:30}};
- const gash=(big)=>{const a=-.5+rnd()*1;body({over:[{t:'gash',x:0,y:g.waist-.1,a,l:big?.4:.28}]});burst(0,g.waist-.1,big?26:16,1.8,-.9,1)};
- const headcrush=()=>{body({excl:[HEAD],over:[{t:'splat',x:.02,y:g.hy,r:.17}],vx:bk*1.4,vy:-.9,fly:true,fd:.5});burst(.02,g.hy,34,2.2,-1.6,2.4)};
- const fling=()=>{body({over:[{t:'gash',x:0,y:g.waist-.12,a:.3,l:.3}],vx:bk*(2+rnd()),vy:-(1.2+rnd()*.8),fly:true,fd:.7});burst(0,g.waist-.12,20,2,-1,1.4)};
- const headpop=()=>{body({excl:[HEAD],over:[cap(.02,neckY,.075)]});part([HEAD],[0,g.hy+.02],[bk*1.2,-2.4],sg()*7,[cap(.02,neckY,.075)]);burst(.02,neckY,28,2.4,-1.5,.9);g.chips=6;g.spurt={fx:.02,fy:neckY,until:.7,rate:26}};
- const crumple=()=>{body({fd:.34,over:[{t:'splat',x:0,y:g.waist-.1,r:.12}]});burst(0,g.waist-.1,14,1.6,-1,1.4)};
- const shatter=()=>{const r=rnd();if(r<.45){const HB=cap(.02,neckY,.06);body({excl:[HEAD],over:[HB]});part([HEAD],[0,g.hy+.02],[bk*(.8+rnd()),-(2+rnd()*1.2)],sg()*(5+rnd()*6),[HB])}else if(r<.8)bisect();else arm();g.chips=14;burst(0,g.waist,8,1.6,-1,1.3)};
- const ash=()=>{body({ash:true,fd:1});g.ashCol=g.orb||'#ff9a3a'};
+/* ---------- Bild eines Teils: figure() nur mit den genannten Teilen in ein kleines Canvas ---------- */
+function goreSprite(g,Hf,U,t,box,passes,over){
+ const pr=Math.min(2,dpr||1),w=Math.max(2,Math.ceil((box[2]-box[0])*U)),h=Math.max(2,Math.ceil((box[3]-box[1])*U)),ox=-box[0]*U,oy=-box[1]*U;
+ const cv=document.createElement('canvas');cv.width=Math.round(w*pr);cv.height=Math.round(h*pr);const s=cv.getContext('2d');s.scale(pr,pr);
+ for(const ps of passes){s.save();if(ps[1]){s.beginPath();s.rect(0,(ps[1][0]-box[1])*U,w,(ps[1][1]-ps[1][0])*U);s.clip()}
+  figure(s,mkFig(g.fk,g.d,{x:ox,y:oy,H:Hf,dir:1,t,ph:g.ph,wt:g.wt,mv:false,p:-1,hit:0,fall:0,parts:ps[0],cloth:g.cloth,alpha:1}));s.restore()}
+ if(over&&over.length){s.save();s.translate(ox,oy);for(const o of over)goreOver(s,g,o,U);s.restore()}
+ return{cv,w,h,ox,oy,U0:U}}
+const GRANK={legs:0,leg:0,body:1,upper:1,head:2,arm:3,wp:4};
+function goreBuild(g,Hf,U,t){
+ g.built=true;
+ const rnd=Math.random,sg=()=>rnd()<.5?-1:1,bk=(g.back*g.dir)||-1,seat=g.cav?(MT[g.mt]||MT.horse).seat:.44,up=g.cav?seat*1.2-.44:0;
+ const ms=g.big?.55:1,br=g.brut?1.55:1,W0=g.w,wk=g.wk;
+ g.hy=-.88-up;g.sh=g.hy+.14;g.waist=-.60-up;
+ const NK=-.76-up,SH=-.72-up,HIP=-.44-up,KN=-.24-up;
+ const cap=(x,y,w)=>({t:'cap',x,y,w}),burst=(fx,fy,n,sp,ang,spr)=>g.bursts.push({fx,fy,n,sp,ang,spr});
+ const droppable=wk!=='claw'&&!g.gh&&W0!=='pest';
+ const ALL=['body','legs','head','arm','wp'];
+ const mk=(kind,box,passes,over,C,hl,hw,o)=>{const q=Object.assign({kind,sp:goreSprite(g,Hf,U,t,box,passes,over),cx:C[0],cy:C[1],hl,hw,x:C[0],y:C[1],a:0,vx:0,vy:0,w:0,mode:'lie',bn:0,t:0,fd:.55,sgn:1,fx:0,ax:-Math.PI/2,settle:true,rank:GRANK[kind]},o||{});g.pcs.push(q);return q};
+ const fly=(q,vx,vy,w)=>{q.mode='fly';q.vx=bk*vx*br*ms;q.vy=-vy*Math.sqrt(br)*(g.big?.7:1);q.w=w*br*ms;return q};
+ const hd=(over)=>mk('head',goreBox('head',up),[[['head']]],over,[.03,-.88-up],.15,.15,{settle:false});
+ const arm=(withWp,over)=>withWp?mk('arm',goreBox('wp',up),[[['arm','wp']]],over,[.14,-.52-up],.45,.15,{settle:false,rank:3}):mk('arm',goreBox('arm',up),[[['arm']]],over,[.12,-.56-up],.2,.08,{ax:1.0713});
+ const wpn=()=>mk('wp',goreBox('wp',up),[[['wp']]],null,[.17,-.48-up],WHL[wk]||.3,.06,{ax:goreAxis(wk)});
+ const legsP=(over)=>mk('legs',goreBox('legs',up),[[['legs']]],over,[0,-.22-up],.28,.24);
+ const body=(rm,over,adds,o)=>{const parts=ALL.filter(x=>rm.indexOf(x)<0),hasL=parts.indexOf('legs')>=0||(adds&&adds.length>0)||parts.some(x=>x==='legA'||x==='legB');
+  const passes=(adds||[]).concat([[parts]]);const q=mk(hasL?'body':'upper',goreBox(hasL?'body':'upper',up),passes,over,hasL?[.02,-.55-up]:[0,-.98-up],hasL?.58:.38,.2,o);if(!g.main)g.main=q;return q};
+ const tip=(q,fd,slide,delay)=>{if(g.cav){return fly(q,.5+rnd()*.5,.6+rnd()*.7,bk*(1.4+rnd()*2.2))}q.mode='tip';q.sgn=bk>0?1:-1;q.fd=fd*(g.big?1.5:1);q.t=-(delay||0);q.vx=bk*slide*br;return q};
+ const stain=(x,y,r)=>({t:'stain',x,y,r});
  const arrows=(n,len)=>{const ov=[];for(let i=0;i<n;i++)ov.push({t:'arrow',x:-.08+rnd()*.2,y:g.hy+.16+rnd()*(g.waist-g.hy),a:-(.2+rnd()*.55),l:len*(.9+rnd()*.25)});return ov};
- if(g.skel&&(W0==='slash'||W0==='cleave'||W0==='blunt'||W0==='claw'||W0==='pierce'))return shatter();
- const r=rnd();
- switch(W0){
-  case 'slash':if(r<.30)decap();else if(r<.52)arm();else if(r<.70&&!g.cav&&!g.big)bisect();else gash(false);break;
-  case 'cleave':if(g.th){body({over:[{t:'axe',x:.06,y:g.waist-.14,a:-.5}]});burst(.06,g.waist-.14,22,1.8,-.8,1.1);break}
-   if(r<.34)decap();else if(r<.60&&!g.cav)bisect();else if(r<.80)arm();else gash(true);break;
-  case 'blunt':if(g.th){body({over:[{t:'dent',x:.04,y:g.waist-.16}],vx:bk*1.2,vy:-.7,fly:true,fd:.5});burst(.04,g.waist-.16,18,1.8,-.8,1.2);break}
-   if(r<.32)headcrush();else if(r<.58)fling();else if(r<.80)headpop();else crumple();break;
-  case 'pierce':if(g.th){const b=body({over:[{t:'spear',x:.05,y:g.waist-.10,a:-.28+rnd()*.2,l:.8+rnd()*.2,brk:0}]});burst(.05,g.waist-.1,20,1.7,-.8,1);b.vx=bk*.5}
-   else{body({over:[{t:'gash',x:.02,y:g.waist-.05,a:-.15,l:.2}].concat(rnd()<.3?[{t:'spear',x:.04,y:g.waist-.05,a:-.2,l:.25,brk:1}]:[]),vx:bk*.7});burst(-.08,g.waist-.05,22,2.6,Math.PI+.2*(bk>0?1:-1),.7);burst(.04,g.waist-.05,10,1.4,-.2,.8)}break;
-  case 'arrow':case 'bolt':{const n=W0==='bolt'?1+(rnd()<.4?1:0):1+Math.floor(rnd()*3);if(n===1&&rnd()<.35){body({over:[{t:'arrow',x:.1,y:g.hy-.02,a:-.12,l:W0==='bolt'?.24:.34}],vx:bk*.9,fd:.5});burst(.1,g.hy,16,1.6,-.4,.9)}
-   else{body({over:arrows(n,W0==='bolt'?.24:.34),vx:bk*.6});burst(0,g.waist-.1,10+n*4,1.5,-.6,1)}break}
-  case 'shot':body({over:[{t:'hole',x:.06,y:g.waist-.14}],vx:bk*1.3,vy:-.4,fly:true,fd:.45});burst(-.12,g.waist-.14,22,2.8,Math.PI+.15*(bk>0?-1:1),.7);break;
-  case 'magic':ash();break;
-  case 'claw':if(r<.3)arm();else{body({over:[{t:'claw',x:0,y:g.waist-.15}]});burst(0,g.waist-.15,22,1.8,-.9,1.2)}break;
-  default:body({over:[],vx:bk*.3});burst(0,g.waist-.1,10,1.3,-.8,1)}}
-function goreBodyPt(pc,fx,fy){const e=pc.fall>0?eo(pc.fall):0,a=-e*1.48,ca=Math.cos(a),sa=Math.sin(a);return[fx*ca-fy*sa+pc.ox,fx*sa+fy*ca-.04*e+pc.oy]}
-function goreStepObj(g,dt){g.age+=dt;const G=7;
- for(const pc of g.pcs){
-  if(pc.role==='body'){if(g.age<(pc.delay||0))continue;pc.fall=Math.min(1,pc.fall+dt/pc.fd);
-   if(pc.fly){pc.vy+=G*dt;pc.ox+=pc.vx*dt;pc.oy+=pc.vy*dt;if(pc.oy>=0){pc.oy=0;pc.vx*=.45;pc.vy=0;pc.fly=false}}else{pc.ox+=pc.vx*dt;pc.vx*=Math.pow(.03,dt)}}
-  else if(!pc.rest){pc.vy+=G*dt;pc.ox+=pc.vx*dt;pc.oy+=pc.vy*dt;pc.a+=pc.w*dt;const gnd=-pc.pv[1]-.06;
-   if(pc.oy>gnd){pc.oy=gnd;if(Math.abs(pc.vy)>.7&&pc.bn<3){pc.vy*=-.3;pc.vx*=.6;pc.w*=.55;pc.bn++;pc.hitG=true}else{pc.vy=0;pc.vx*=.7;pc.w*=.5;if(Math.abs(pc.vx)<.05&&Math.abs(pc.w)<.2)pc.rest=true}}}}}
+ const wdrop=droppable&&W0!=='magic'&&rnd()<.88;
+ const pk=(a)=>{let s=0;for(const x of a)s+=x[1];let r=rnd()*s;for(const x of a){r-=x[1];if(r<=0)return x[0]}return a[0][0]};
+ /* ---- Art des Todes ---- */
+ let kind;const mel=(W0==='slash'||W0==='cleave'||W0==='blunt'||W0==='claw'||W0==='pierce');
+ if(g.skel&&mel)kind='shatter';
+ else switch(W0){
+  case 'slash':kind=pk([['decap',22],['arm',22],['leg',14],['bisect',g.brut?9:3],['fling',g.brut?18:4],['wound',22]]);break;
+  case 'cleave':kind=g.th?'axe':pk([['decap',26],['arm',20],['leg',12],['bisect',g.brut?18:9],['fling',g.brut?15:4],['wound',16]]);break;
+  case 'blunt':kind=g.th?'dent':pk([['headcrush',24],['fling',g.brut?44:28],['headpop',20],['crumple',16]]);break;
+  case 'pierce':kind=g.th?'spear':pk([['stab',70],['fling',g.brut?20:6],['arm',12]]);break;
+  case 'arrow':case 'bolt':kind='arrows';break;
+  case 'shot':kind='shot';break;
+  case 'magic':kind='ash';break;
+  case 'claw':kind=pk([['arm',25],['wound',75]]);break;
+  default:kind='crumple'}
+ if(g.force)kind=g.force;
+ if(g.big){if(kind==='leg'||kind==='bisect')kind='wound';else if(kind==='fling')kind='crumple';else if(kind==='decap'&&rnd()<.5)kind='wound'}
+ if(g.cav&&(kind==='leg'||kind==='bisect'))kind='wound';
+ g.kindDeath=kind;
+ if(kind==='ash'){g.ashMode=true;g.life=2.8;g.ashCol=g.orb||'#ff9a3a';return}
+ let rm=[],ov=[],adds=null,bmode='tip',armHasWp=false;
+ switch(kind){
+  case 'decap':case 'headpop':{const pop=kind==='headpop',h=hd([cap(.03,NK,.07)]);fly(h,pop?1.2:.8+rnd()*1.3,pop?2.8:1.6+rnd()*1.0,sg()*(5+rnd()*8));
+   rm=['head'];ov=[cap(.03,NK,.075)];burst(.03,NK,pop?28:26,2.3,-1.45,.7);g.spurt={fx:.03,fy:NK,until:.95,rate:38};if(pop)g.chips=6;break}
+  case 'headcrush':rm=['head'];ov=[{t:'splat',x:.03,y:NK-.08,r:.17}];burst(.03,g.hy,34,2.2,-1.6,2.4);g.chips=5;bmode=[1.2,.9,bk*3];break;
+  case 'arm':{const keep=droppable&&rnd()<.45,a=arm(keep,[cap(.05,SH,.05)]);fly(a,.9+rnd()*1.1,1.2+rnd()*1.2,sg()*(5+rnd()*5));
+   rm=['arm'];if(keep){rm.push('wp');armHasWp=true}ov=[cap(.05,SH,.06),stain(.04,SH+.14,.08)];burst(.05,SH,20,2,-1.2,.9);g.spurt={fx:.05,fy:SH,until:.7,rate:26};break}
+  case 'leg':{const side=rnd()<.5?'legA':'legB',sx=side==='legA'?.05:-.05,lp=mk('leg',goreBox('leg',up),[[[side],[KN,.4]]],[cap(sx,KN,.045)],[sx,-.12-up],.13,.08);
+   fly(lp,.7+rnd()*.8,1+rnd()*1,sg()*(4+rnd()*4));rm=['legs'];adds=[[[side=== 'legA'?'legB':'legA']],[[side],[-1.5,KN]]];
+   ov=[cap(sx,KN,.05)];burst(sx,KN,22,2,-1,1);g.spurt={fx:sx,fy:KN,until:.8,rate:28};bmode='legcut';break}
+  case 'bisect':{const lg=legsP([{t:'band',x:0,y:HIP,w:.15}]);lg.mode='tip';lg.sgn=-(bk>0?1:-1);lg.fd=.5;lg.t=-.12;lg.vx=-bk*.4;
+   rm=['legs'];ov=[{t:'band',x:0,y:HIP,w:.16,a:(rnd()-.5)*.4}];burst(0,HIP,36,2,-1.1,1.2);g.spurt={fx:0,fy:HIP,until:.8,rate:30};bmode=[1.0,.7,bk*(2.5+rnd()*2.5)];break}
+  case 'fling':ov=[stain(.04,g.waist-.1,.1)];burst(0,g.waist-.12,22,2,-1,1.4);bmode=[2.4+rnd()*1.4,1.6+rnd()*1,bk*(5+rnd()*5)];break;
+  case 'crumple':ov=[{t:'splat',x:0,y:g.waist-.1,r:.1}];burst(0,g.waist-.1,14,1.6,-1,1.4);bmode='tip.34';break;
+  case 'wound':ov=[stain(.03,g.waist-.04,.09+rnd()*.03)];burst(0,g.waist-.1,rnd()<.5?16:26,1.8,-.9,1);break;
+  case 'stab':ov=[stain(.02,g.waist-.05,.07)].concat(rnd()<.3?[{t:'spear',x:.04,y:g.waist-.05,a:-.2,l:.25,brk:1}]:[]);burst(-.08,g.waist-.05,22,2.6,Math.PI+.2*(bk>0?1:-1),.7);burst(.04,g.waist-.05,10,1.4,-.2,.8);bmode='tip.5';break;
+  case 'spear':ov=[{t:'spear',x:.05,y:g.waist-.10,a:-.28+rnd()*.2,l:.8+rnd()*.2,brk:0}];burst(.05,g.waist-.1,20,1.7,-.8,1);break;
+  case 'axe':ov=[{t:'axe',x:.06,y:g.waist-.14,a:-.5}];burst(.06,g.waist-.14,22,1.8,-.8,1.1);break;
+  case 'dent':ov=[{t:'dent',x:.04,y:g.waist-.16}];burst(.04,g.waist-.16,18,1.8,-.8,1.2);bmode=[1.2,.7,bk*2];break;
+  case 'arrows':{const n=W0==='bolt'?1+(rnd()<.4?1:0):1+Math.floor(rnd()*3),ln=W0==='bolt'?.24:.34;
+   if(n===1&&rnd()<.35){ov=[{t:'arrow',x:.1,y:g.hy-.02,a:-.12,l:ln}];burst(.1,g.hy,16,1.6,-.4,.9)}else{ov=arrows(n,ln);burst(0,g.waist-.1,10+n*4,1.5,-.6,1)}break}
+  case 'shot':ov=[{t:'hole',x:.06,y:g.waist-.14}];burst(-.12,g.waist-.14,22,2.8,Math.PI+.15*(bk>0?-1:1),.7);bmode=[1.3,.5,bk*1.6];break;
+  case 'shatter':{const keep=droppable&&rnd()<.5,h=hd(null),a=arm(keep,null);fly(h,.8+rnd()*1.2,2+rnd()*1.2,sg()*(5+rnd()*6));fly(a,.6+rnd()*1.2,1.3+rnd()*1.3,sg()*(4+rnd()*6));
+   const lg=legsP(null);lg.mode='tip';lg.sgn=bk>0?1:-1;lg.fd=.42;lg.vx=bk*.3;rm=['head','arm','legs'];if(keep){rm.push('wp');armHasWp=true}
+   g.chips=14;burst(0,g.waist,8,1.6,-1,1.3);bmode=[.7+rnd()*.7,.9+rnd()*.8,bk*(2+rnd()*3)];break}
+  default:break}
+ /* Waffe faellt ab (oder bleibt in der Hand) */
+ let wp=null;if(wdrop&&!armHasWp&&rm.indexOf('wp')<0){rm.push('wp');wp=wpn();
+  const ang=rnd();fly(wp,(ang<.3?-.5:.3)+rnd()*1.5,.5+rnd()*1.7,sg()*(3+rnd()*7))}
+ /* Koerper */
+ const b=body(rm,ov,adds);
+ if(Array.isArray(bmode)){fly(b,bmode[0],bmode[1],bmode[2])}
+ else if(bmode==='legcut'){tip(b,.75,.6,0)}
+ else if(typeof bmode==='string'&&bmode.indexOf('tip.')===0){tip(b,parseFloat(bmode.slice(3)),.5,0)}
+ else tip(b,.55,.35,0);
+ if(g.spurt)g.spurt.pc=b;
+ g.pcs.sort((p,q)=>p.rank-q.rank);
+ /* Reittier */
+ if(g.cav){const run=rnd()<.55;g.mount={run,rs:sg(),t:0,fx:0,vx:run?3+rnd()*.6:bk*.9,wt:g.wt,fall:0,fd:.75,dur:3.4,done:false}}
+}
+function gorePt(pc,fx,fy){const dx=fx-pc.cx,dy=fy-pc.cy,ca=Math.cos(pc.a),sa=Math.sin(pc.a);return[pc.x+dx*ca-dy*sa,pc.y+dx*sa+dy*ca]}
+function goreExt(q){const th=q.ax+q.a;return q.hl*Math.abs(Math.sin(th))+q.hw*Math.abs(Math.cos(th))}
+function gorePhys(q,dt){
+ const G=7;if(q.mode==='lie')return;
+ if(q.mode==='tip'){q.t+=dt;if(q.t<0)return;q.fx+=q.vx*dt;q.vx*=Math.pow(.03,dt);const e=Math.min(1,q.t/q.fd);q.a=q.sgn*1.48*e*e;const ca=Math.cos(q.a),sa=Math.sin(q.a);q.x=q.fx+q.cx*ca-q.cy*sa;q.y=q.cx*sa+q.cy*ca;if(e>=1)q.mode='lie';return}
+ q.vy+=G*dt;q.x+=q.vx*dt;q.y+=q.vy*dt;q.a+=q.w*dt;
+ if(q.mode==='fly'){const ex=goreExt(q);if(q.y+ex>=0){q.y=-ex;if(q.vy>.9&&q.bn<3){q.vy*=-.3;q.vx*=.62;q.w*=.6;q.bn++;q.hitG=true}else{q.vy=0;q.mode='slide'}}}
+ else{q.vy=0;q.vx*=Math.pow(.004,dt);q.w*=Math.pow(.01,dt);
+  if(q.settle){const r=-q.ax,k=Math.round((q.a-r)/Math.PI),tg=r+k*Math.PI;q.a+=(tg-q.a)*Math.min(1,dt*9)}
+  q.y=-goreExt(q);if(Math.abs(q.vx)<.04&&Math.abs(q.w)<.15)q.mode='lie'}}
+function goreStepObj(g,dt){g.age+=dt;
+ for(const q of g.pcs)gorePhys(q,dt);
+ const m=g.mount;if(m&&!m.done){m.t+=dt;m.fx+=m.vx*dt;if(m.run){m.vx*=Math.pow(.82,dt);m.wt+=dt*(8+m.vx*2);if(m.t>m.dur)m.done=true}else{m.vx*=Math.pow(.05,dt);m.fall=Math.min(1,m.fall+dt/m.fd)}}
+ if(g.age>7)for(const q of g.pcs)q.mode='lie'}
 function goreDecal(x,y,r,col,al){const L=GORE.lc;if(!L)return;L.save();L.globalAlpha=al;L.fillStyle=col;const ls=GORE.ls;L.setTransform(ls,0,0,ls,0,0);
  L.beginPath();L.ellipse(x,y,r,r*.5,0,0,7);L.fill();for(let i=0;i<3;i++){L.beginPath();L.ellipse(x+(Math.random()-.5)*r*2.1,y+(Math.random()-.5)*r*.9,r*(.25+Math.random()*.3),r*.14,0,0,7);L.fill()}L.restore()}
 function goreGround(c){if(!goreLevel())return;
@@ -76,41 +145,36 @@ function goreBits(g,px,py,n,U,sx,gy,kind,col){const cap=g.lv===1?60:g.lv===2?140
   GORE.bits.push({x:sx+g.dir*px*U,y:gy+py*U,vx:Math.cos(a)*v,vy:Math.sin(a)*v,gr:U*9,r:U*(.012+Math.random()*.02),rot:Math.random()*6,w:(Math.random()-.5)*14,t:kind==='ember'?1.1+Math.random()*.8:3+Math.random()*3,max:2,kind,col:col||'#e8e2c8',gy:gy+(Math.random()-.5)*U*.1})}}
 function goreItems(items,c,top,lh,X,baseH,t,dt){
  for(const g of GORE.objs){const l=g.lane,s=pf(l),Hf=sizeOf(g.d,baseH*s),U=Hf*FPROP[g.fk].h,sx=X(g.x),gy=top+(l+.5)*lh+g.yo*lh*.55+lh*.3;
-  goreStepObj(g,dt);items.push({y:top+(l+.5)*lh+g.yo*lh*.55-1,fn:()=>goreDraw(c,g,Hf,U,sx,gy,t)})}
- GORE.objs=GORE.objs.filter(g=>g.age<g.life)}
-function goreSettled(g){if(g.age>4)for(const pc of g.pcs){if(pc.role==='part')pc.rest=true;else{pc.vx=0;pc.fly=false;pc.fall=1}}
- if(g.spurt&&g.age<g.spurt.until)return false;for(const pc of g.pcs){if(pc.ash)return false;if(pc.role==='body'){if(pc.fall<1||pc.fly||Math.abs(pc.vx)>.03)return false}else if(!pc.rest)return false}return true}
-function goreMakeCache(g,Hf,U,t){let mn=1e9,mx=-1e9;for(const pc of g.pcs){const x=g.dir*(pc.pv[0]+pc.ox)*U;mn=Math.min(mn,x);mx=Math.max(mx,x)}
- const m=1.2*U,ox=mn-m,w=Math.ceil(mx-mn+2*m),oy=-1.4*U,h=Math.ceil(1.75*U);if(w*h>900000){g.noCache=true;return}
- const cv=document.createElement('canvas');cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);const cc=cv.getContext('2d');cc.scale(dpr,dpr);
- for(const pc of g.pcs)gorePiece(cc,g,pc,Hf,U,-ox,-oy,t,1);g.cache={cv,w,h,ox,oy,U:Math.round(U)}}
+  if(!g.built){try{goreBuild(g,Hf,U,t)}catch(e){console.error('Todesanimation:',e);g.dead=true;continue}}
+  goreStepObj(g,dt);
+  items.push({y:top+(l+.5)*lh+g.yo*lh*.55-1,fn:()=>goreDraw(c,g,Hf,U,sx,gy,t)})}
+ GORE.objs=GORE.objs.filter(g=>!g.dead)}
+function goreSettled(g){if(g.spurt&&g.age<g.spurt.until)return false;for(const q of g.pcs)if(q.mode!=='lie')return false;const m=g.mount;if(m&&!m.done&&(m.run||m.fall<1))return false;return true}
+function gorePieceDraw(c,g,q,U,sx,gy){const sp=q.sp,S=U/sp.U0;c.save();c.translate(sx+g.dir*q.x*U,gy+q.y*U);c.scale(g.dir,1);c.rotate(q.a);c.translate(-q.cx*U,-q.cy*U);c.scale(S,S);c.drawImage(sp.cv,-sp.ox,-sp.oy,sp.w,sp.h);c.restore()}
+/* Reittier: laeuft ohne Reiter weiter oder ueberschlaegt sich und bleibt mit den Beinen nach oben liegen */
+function goreMountDraw(c,g,Hf,U,sx,gy,t,al,e,wt,run){const m=g.mount;c.save();c.translate(sx+g.dir*m.fx*U,gy);
+ if(!run&&e>0){const k=e*e*(3-2*e);c.translate(0,.3*U*k);c.translate(0,-.5*U);c.rotate(m.rs*Math.PI*k);c.translate(0,.5*U)}
+ figure(c,mkFig(g.fk,g.d,{x:0,y:0,H:Hf,dir:g.dir,t,ph:g.ph,wt,mv:run,fall:0,parts:['mount'],cloth:g.cloth,alpha:al}));c.restore()}
+/* Ruhende Teile samt liegendem Reittier in die Bodenschicht brennen: danach kostet der Tote nur noch Bildpunkte */
+function goreBake(g,Hf,U,sx,gy,t){const L=GORE.lc;if(!L)return;L.save();L.setTransform(GORE.ls,0,0,GORE.ls,0,0);
+ const m=g.mount;if(m&&!m.run&&!m.done)goreMountDraw(L,g,Hf,U,sx,gy,t,1,1,0,false);
+ for(const q of g.pcs)gorePieceDraw(L,g,q,U,sx,gy);L.restore()}
 function goreDraw(c,g,Hf,U,sx,gy,t){
  if(g.first){g.first=false;try{if(AU.ctx&&AU.opt.sfx>0&&gate('splat',70))SFX.splat((sx/Math.max(1,cw))*1000)}catch(e){}
-  for(const b of g.bursts)goreBlood(g,b.fx,b.fy,b.n,b.sp,b.ang+(g.dir<0?0:0),b.spr,U,sx,gy);
+  for(const b of g.bursts)goreBlood(g,b.fx,b.fy,b.n,b.sp,b.ang,b.spr,U,sx,gy);
   if(g.skel||g.chips)goreBits(g,0,g.hy,g.chips||10,U,sx,gy,'bone',g.skel?'#e6e0c4':'#d8cfb0');
-  if(g.w==='magic')goreBits(g,0,g.waist,28,U,sx,gy,'ember',g.ashCol)}
- const al=g.age>g.life-2.2?Math.max(0,(g.life-g.age)/2.2):1,bd=g.pcs[0];
- if(g.cache&&g.cache.U!==Math.round(U))g.cache=null;
- if(g.cache){c.save();c.globalAlpha=al;c.drawImage(g.cache.cv,sx+g.cache.ox,gy+g.cache.oy,g.cache.w,g.cache.h);c.restore();return}
- if(!g.noCache&&g.age>2.2&&goreSettled(g))goreMakeCache(g,Hf,U,t);
- if(g.spurt&&g.age<g.spurt.until){const sp=g.spurt,k=1-g.age/sp.until;if(Math.random()<sp.rate*k*.016*(g.lv===1?.6:1.2)){const q=goreBodyPt(bd,sp.fx,sp.fy);goreBlood(g,q[0],q[1],2,1.1,-1.4,.9,U,sx,gy)}}
- if(!g.pool&&g.age>.8&&!g.skel){g.pool=true;const q=bd.ox;goreDecal(sx+g.dir*q*U,gy-U*.02,U*(.16+g.ov*.06+(g.big?.1:0)),g.col,.45)}
- for(const pc of g.pcs)gorePiece(c,g,pc,Hf,U,sx,gy,t,al);
- for(const pc of g.pcs){if(pc.hitG){pc.hitG=false;const q=[pc.ox+pc.pv[0],pc.pv[1]+pc.oy];if(!g.skel)goreBlood(g,q[0],q[1]-.02,6,.7,-1.2,.9,U,sx,gy);else goreBits(g,q[0],q[1],3,U,sx,gy,'bone')}}}
-function gorePiece(c,g,pc,Hf,U,sx,gy,t,al){const dir=g.dir,pvx=pc.pv[0],pvy=pc.pv[1];
- if(pc.ash){goreAsh(c,g,pc,Hf,U,sx,gy,t,al);return}
- c.save();c.translate(sx+dir*(pvx+pc.ox)*U,gy+(pvy+pc.oy)*U);if(pc.a)c.rotate(pc.a*dir);
- const mp=P=>{c.moveTo((P[0][0]-pvx)*dir*U,(P[0][1]-pvy)*U);for(let i=1;i<P.length;i++)c.lineTo((P[i][0]-pvx)*dir*U,(P[i][1]-pvy)*U);c.closePath()};
- if(pc.clip){c.beginPath();pc.clip.forEach(mp);c.clip()}
- if(pc.excl&&pc.excl.length){c.beginPath();c.rect(-6*U,-6*U,12*U,12*U);pc.excl.forEach(mp);c.clip('evenodd')}
- figure(c,mkFig(g.fk,g.d,{x:-pvx*dir*U,y:-pvy*U,H:Hf,dir,t,ph:g.ph,wt:g.wt,fall:pc.fall||0,alpha:al,cloth:g.cloth}));
- c.restore();
- if(!pc.over.length)return;
- c.save();c.translate(sx+dir*(pvx+pc.ox)*U,gy+(pvy+pc.oy)*U);if(pc.a)c.rotate(pc.a*dir);c.translate(-pvx*dir*U,-pvy*U);c.scale(dir,1);
- if(pc.fall>0){c.translate(0,-U*.04*eo(pc.fall));c.rotate(-eo(pc.fall)*1.48)}
- c.globalAlpha=al;for(const o of pc.over)goreOver(c,g,o,U);c.restore()}
+  if(g.ashMode)goreBits(g,0,g.waist,28,U,sx,gy,'ember',g.ashCol)}
+ if(g.ashMode){const al=g.age>g.life-.8?Math.max(0,(g.life-g.age)/.8):1;goreAsh(c,g,null,Hf,U,sx,gy,t,al);if(g.age>=g.life)g.dead=true;return}
+ if(g.spurt&&g.spurt.pc&&g.age<g.spurt.until){const sp=g.spurt,k=1-g.age/sp.until;if(Math.random()<sp.rate*k*.016*(g.lv===1?.6:1.2)){const q=gorePt(sp.pc,sp.fx,sp.fy);goreBlood(g,q[0],q[1],2,1.1,-1.4,.9,U,sx,gy)}}
+ if(g.main){if(!g.pool&&g.age>.8&&!g.skel){g.pool=true;goreDecal(sx+g.dir*g.main.x*U,gy-U*.02,U*(.16+g.ov*.06+(g.big?.1:0)),g.col,.45)}
+  c.save();c.fillStyle='rgba(0,0,0,.22)';c.beginPath();c.ellipse(sx+g.dir*g.main.x*U,gy,U*.3,U*.06,0,0,7);c.fill();c.restore()}
+ const m=g.mount;if(m&&!m.done){const al=m.run?Math.max(0,Math.min(1,(m.dur-m.t)/.8)):1;goreMountDraw(c,g,Hf,U,sx,gy,t,al,m.run?0:m.fall,m.wt,m.run)}
+ for(const q of g.pcs)gorePieceDraw(c,g,q,U,sx,gy);
+ for(const q of g.pcs)if(q.hitG){q.hitG=false;if(q.kind==='wp')continue;const p=gorePt(q,q.cx,q.cy);if(!g.skel)goreBlood(g,p[0],p[1]-.02,5,.7,-1.2,.9,U,sx,gy);else goreBits(g,p[0],p[1],3,U,sx,gy,'bone')}
+ if((g.age>1.2&&goreSettled(g))||g.age>g.life){goreBake(g,Hf,U,sx,gy,t);g.dead=true}}
 function goreOver(c,g,o,U){const col=g.col,x=o.x*U,y=o.y*U;c.save();c.translate(x,y);
  if(o.t==='cap'||o.t==='band'){const w=o.w*U;if(o.a)c.rotate(o.a);c.fillStyle=g.skel?'#d8d2b8':col;c.beginPath();c.ellipse(0,0,w,w*(o.t==='band'?.28:.5),0,0,7);c.fill();c.fillStyle=g.skel?'#9a9478':'#5a0a0a';c.beginPath();c.ellipse(0,0,w*.55,w*.22,0,0,7);c.fill()}
+ else if(o.t==='stain'){const r=o.r*U;c.fillStyle=col;c.globalAlpha*=.85;c.beginPath();for(let i=0;i<10;i++){const a=i/10*6.283,k=.7+((i*53)%7)/12;c.lineTo(Math.cos(a)*r*k,Math.sin(a)*r*k*1.1)}c.closePath();c.fill();c.fillStyle='#00000030';c.beginPath();c.arc(0,0,r*.4,0,7);c.fill();c.fillStyle=col;for(let i=0;i<3;i++)c.fillRect(-r*.5+i*r*.5,r*.7,Math.max(1.5,U*.02),r*(.4+.3*((i*3)%2)))}
  else if(o.t==='gash'){c.rotate(o.a);c.strokeStyle=col;c.lineWidth=Math.max(2,U*.045);c.lineCap='round';c.beginPath();c.moveTo(-o.l*U/2,0);c.lineTo(o.l*U/2,0);c.stroke();c.strokeStyle='#00000066';c.lineWidth=Math.max(1,U*.015);c.stroke()}
  else if(o.t==='splat'){const r=o.r*U;c.fillStyle=col;c.beginPath();for(let i=0;i<14;i++){const a=i/14*6.283,k=(i%2?.62:1.12)*(.85+((i*37)%7)/20);c.lineTo(Math.cos(a)*r*k,Math.sin(a)*r*k*.9)}c.closePath();c.fill();c.fillStyle='#00000040';c.beginPath();c.arc(0,0,r*.45,0,7);c.fill();c.fillStyle=g.skel?'#d8d2b8':'#d9bfa6';for(let i=0;i<4;i++){c.beginPath();c.arc(Math.cos(i*2.3+.4)*r*.7,Math.sin(i*2.3+.4)*r*.55,r*.14,0,7);c.fill()}}
  else if(o.t==='arrow'){c.rotate(o.a);c.strokeStyle='#8a6a3a';c.lineWidth=Math.max(1.4,U*.02);c.lineCap='round';c.beginPath();c.moveTo(0,0);c.lineTo(o.l*U,0);c.stroke();c.fillStyle='#e8e0c0';c.beginPath();c.moveTo(o.l*U,0);c.lineTo(o.l*U+U*.07,-U*.03);c.lineTo(o.l*U+U*.05,0);c.lineTo(o.l*U+U*.07,U*.03);c.fill();c.fillStyle='#c8483a';c.beginPath();c.moveTo(o.l*U*.82,0);c.lineTo(o.l*U*.95,-U*.028);c.lineTo(o.l*U*.95,U*.028);c.fill();c.fillStyle=col;c.beginPath();c.arc(0,0,U*.03,0,7);c.fill()}
@@ -128,7 +192,7 @@ function goreAsh(c,g,pc,Hf,U,sx,gy,t,al){const k=Math.min(1,g.age/1.5);
  if(k<.6){c.globalCompositeOperation='lighter';c.globalAlpha=a*(.6-k)*1.2;const gr=c.createRadialGradient(0,-U*.5,U*.05,0,-U*.5,U*.6);gr.addColorStop(0,(g.ashCol||'#ff9a3a')+'cc');gr.addColorStop(1,(g.ashCol||'#ff9a3a')+'00');c.fillStyle=gr;c.fillRect(-U*.7,-U*1.2,U*1.4,U*1.4)}
  c.restore();if(Math.random()<.5*(1-k)&&GORE.bits.length<(g.lv===1?60:140)){const a2=-Math.PI/2+(Math.random()-.5)*1.2;GORE.bits.push({x:sx+(Math.random()-.5)*U*.4,y:gy-U*(.1+Math.random()*.9)*sc,vx:Math.cos(a2)*U*.3,vy:Math.sin(a2)*U*.9,gr:-U*.3,r:U*.014,rot:0,w:0,t:.9+Math.random()*.7,max:1.2,kind:'ember',col:g.ashCol||'#ff9a3a',gy:gy+999})}}
 function goreFx(c,dt){
- if(GORE.lc){GORE.fadeT+=dt;if(GORE.fadeT>2){GORE.fadeT=0;GORE.lc.save();GORE.lc.setTransform(1,0,0,1,0,0);GORE.lc.globalCompositeOperation='destination-out';GORE.lc.fillStyle='rgba(0,0,0,.02)';GORE.lc.fillRect(0,0,GORE.layer.width,GORE.layer.height);GORE.lc.restore()}}
+ if(GORE.lc){GORE.fadeT+=dt;if(GORE.fadeT>2.5){GORE.fadeT=0;GORE.lc.save();GORE.lc.setTransform(1,0,0,1,0,0);GORE.lc.globalCompositeOperation='destination-out';GORE.lc.fillStyle='rgba(0,0,0,.03)';GORE.lc.fillRect(0,0,GORE.layer.width,GORE.layer.height);GORE.lc.restore()}}
  for(const d of GORE.drops){d.t-=dt;d.x+=d.vx*dt;d.y+=d.vy*dt;d.vy+=d.gr*dt;
   if(d.y>=d.gy){d.t=0;goreDecal(d.x,d.y,d.sz*1.6,d.col,.5)}else{c.strokeStyle=d.col;c.lineWidth=d.sz*1.15;c.lineCap='round';c.beginPath();c.moveTo(d.x,d.y);c.lineTo(d.x-d.vx*.022,d.y-d.vy*.022);c.stroke()}}
  GORE.drops=GORE.drops.filter(d=>d.t>0);
